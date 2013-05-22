@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
+  <Identifier Id="3ac9d6e9-a3dc-4a27-a048-f4bb7fe5889b">
+    <Name>XFeatures</Name>
+    <Author>Atmel</Author>
+    <Version>1.0</Version>
+    <Description xml:space="preserve">It conatains set of features which will ease the life of Atmel Studio user.</Description>
+    <Locale>1033</Locale>
+    <InstalledByMsi>false</InstalledByMsi>
+    <SupportedProducts>
+      <IsolatedShell Version="6.1">AtmelStudio</IsolatedShell>
+      <VisualStudio Version="10.0">
+        <Edition>Pro</Edition>
+      </VisualStudio>
+    </SupportedProducts>
+    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
+  </Identifier>
+  <References />
+  <Content>
+    <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
+  </Content>
+</Vsix>
