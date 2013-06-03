@@ -1,5 +1,5 @@
 ﻿using System;
-//using System.Collections.Generic;
+using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
 //using System.Diagnostics;
@@ -22,12 +22,14 @@ using System.Drawing;
 using System.IO;
 //using System.Runtime.InteropServices;
 using Standard;
+using Company.XFeatures.Helpers;
 namespace Atmel.XFeatures.BuildNotification
 {
     internal class ASBuildNotifier
     {
         private readonly NotifyIcon notifyIcon = new NotifyIcon();
         private DTE dte;
+        private List<string> projectsBuildReport = null;
         ~ASBuildNotifier()
         {
             notifyIcon.Dispose();
@@ -41,9 +43,12 @@ namespace Atmel.XFeatures.BuildNotification
             notifyIcon.BalloonTipClicked += new EventHandler(BalloonTipClicked);
             events2.BuildEvents.OnBuildBegin += new _dispBuildEvents_OnBuildBeginEventHandler(ASBuildNotifier_OnBuildBegin);
             events2.BuildEvents.OnBuildDone += ASBuildNotifier_OnBuildDone;
+            events2.BuildEvents.OnBuildProjConfigBegin += new _dispBuildEvents_OnBuildProjConfigBeginEventHandler(ASBuildNotifier_OnBuildProjConfigBegin);
             events2.BuildEvents.OnBuildProjConfigDone += ASBuildNotifier_OnBuildProjConfigDone;
             InitializeTaskbarList();
+            projectsBuildReport = new List<string>();
         }
+        
         private void BalloonTipClicked(object sender, EventArgs e)
         {
             if (dte == null)
@@ -57,14 +62,24 @@ namespace Atmel.XFeatures.BuildNotification
                 return;
             notifyIcon.Visible = false;
         }
+        void ASBuildNotifier_OnBuildProjConfigBegin(string Project, string ProjectConfig, string Platform, string SolutionConfig)
+        {
+            projectBuildStartTime = DateTime.Now;
+        }
         private void ASBuildNotifier_OnBuildProjConfigDone(string project, string projectConfig, string platform, string solutionConfig, bool success)
         {
+            var elapsed = DateTime.Now - projectBuildStartTime;
+            var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
+
+            bool ispass = dte.Solution.SolutionBuild.LastBuildInfo == 0;
+
+            projectsBuildReport.Add("  " + time + " | " + (ispass ? "Succeeded" : "Failed   ") + " | " + project + " [" + projectConfig + "|" + platform + "]");
             if (dte == null)
                 return;
             if (dte.MainWindow.WindowState != vsWindowState.vsWindowStateMinimize)
                 return;
             notifyIcon.Icon = Icon.ExtractAssociatedIcon(dte.Solution.FullName); //SystemIcons.Application;
-            notifyIcon.Visible = true;
+            notifyIcon.Visible = true;            
             if (success)
                 return;
             notifyIcon.ShowBalloonTip(10000, "Build Project Failed", project, ToolTipIcon.Error);
@@ -74,33 +89,20 @@ namespace Atmel.XFeatures.BuildNotification
         {
             if (dte == null)
                 return;
-            var mainWnd = new IntPtr(dte.MainWindow.HWnd);
-            int failuresCount = dte.Solution.SolutionBuild.LastBuildInfo;
-
-            taskbarList.SetProgressValue(mainWnd, 100, 100);
-
-            taskbarList.SetProgressState(mainWnd,
-                                         failuresCount == 0 ? /*TBPF.NOPROGRESS*/TBPF.NORMAL: TBPF.ERROR);
-
+            ShowBuildReport();
+            TaskbarUpdateEnd();
+            
             if (dte.MainWindow.WindowState != vsWindowState.vsWindowStateMinimize)
                 return;
             notifyIcon.Icon = Icon.ExtractAssociatedIcon(dte.Solution.FullName); //SystemIcons.Application;
             notifyIcon.Visible = true;
-            notifyIcon.ShowBalloonTip(10000, "Build Done", Path.GetFileName(dte.Solution.FullName), ToolTipIcon.Info);
+            notifyIcon.ShowBalloonTip(10000, "Build Completed", /*Path.GetFileName(dte.Solution.FullName)*/" ", ToolTipIcon.Info);
         }
-        //private void BuildEvents_OnBuildDone(vsBuildScope scope, vsBuildAction action)
-        //{
-        //    var mainWnd = new IntPtr(dte.MainWindow.HWnd);
-        //    int failuresCount = dte.Solution.SolutionBuild.LastBuildInfo;
-
-        //    taskbarList.SetProgressValue(mainWnd, 100, 100);
-
-        //    taskbarList.SetProgressState(mainWnd,
-        //                                 failuresCount == 0 ? TBPF.NORMAL : TBPF.ERROR);
-
-        //}
+        
 
         private ITaskbarList3 taskbarList;
+        private DateTime buildStartTime;
+        private DateTime projectBuildStartTime;
         private void InitializeTaskbarList()
         {
             ITaskbarList tempTaskbarList = null;
@@ -119,10 +121,54 @@ namespace Atmel.XFeatures.BuildNotification
                 Utility.SafeRelease(ref tempTaskbarList);
             }
         }
-
-        private void ASBuildNotifier_OnBuildBegin(vsBuildScope scope, vsBuildAction action)
+        private void TaskbarUpdateStart()
         {
             taskbarList.SetProgressState(new IntPtr(dte.MainWindow.HWnd), TBPF.INDETERMINATE);
+        }
+        private void TaskbarUpdateEnd()
+        {
+            var mainWnd = new IntPtr(dte.MainWindow.HWnd);
+            int failuresCount = dte.Solution.SolutionBuild.LastBuildInfo;
+
+            taskbarList.SetProgressValue(mainWnd, 100, 100);
+
+            taskbarList.SetProgressState(mainWnd,
+                                         failuresCount == 0 ? /*TBPF.NOPROGRESS*/TBPF.NORMAL : TBPF.ERROR);
+        }
+        private void ShowBuildReport()
+        {
+            var elapsed = DateTime.Now - buildStartTime;
+            OutputWindowPane BuildOutputPane = null;
+            foreach (OutputWindowPane pane in DteExtensions.DTE2.ToolWindows.OutputWindow.OutputWindowPanes)
+            {
+                if (pane.Guid == VSConstants.OutputWindowPaneGuid.BuildOutputPane_string)
+                {
+                    BuildOutputPane = pane;
+                    break;
+                }
+            }
+
+            if (BuildOutputPane == null)
+            {
+                return;
+            }
+            BuildOutputPane.OutputString("\r\n\t\t\tProjects Build Summary\r\n\t\t\t----------------------\r\n");
+            BuildOutputPane.OutputString("  Time        | Status    | Project [Config|platform]\r\n");
+            BuildOutputPane.OutputString(" -------------|-----------|---------------------------------------------------------------------------------------------------\r\n");                                                
+            foreach (string ReportItem in projectsBuildReport)
+            {
+                BuildOutputPane.OutputString(ReportItem + "\r\n");
+            }
+            var time = elapsed.ToString(@"hh\:mm\:ss\.ff");
+            var text = string.Format("Total Time Elapsed {0}", time);
+            BuildOutputPane.OutputString("\r\n" + text + "\r\n");
+        }
+        private void ASBuildNotifier_OnBuildBegin(vsBuildScope scope, vsBuildAction action)
+        {
+            buildStartTime = DateTime.Now;
+            projectsBuildReport.Clear();
+            TaskbarUpdateStart();
+
         }
     }
 }

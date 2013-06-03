@@ -83,7 +83,7 @@ namespace Atmel.XFeatures.SolutionPriorityLoader
             var prjs = dte.Solution.Projects;
             foreach (Project proj in prjs)
             {
-                ProjectPriorities priority = ProjectPriorities.BackgroundLoad;
+                ProjectPriorities priority = ProjectPriorities.DemandLoad;
                 foreach (var oproj in oldlist)
                 {
                     if (oproj.ProjectName.Equals(proj.Name))

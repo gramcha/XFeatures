@@ -33,7 +33,7 @@ namespace Atmel.XFeatures
         public int OnBeforeOpenProject(ref Guid guidProjectID, ref Guid guidProjectType, string pszFileName, IVsSolutionLoadManagerSupport pSLMgrSupport)
         {
             var slist = SolutionUtilityMgr.ReadSolutionPriorityList();
-            uint projpriority = 1;//ProjectPriorities.BackgroundLoad
+            uint projpriority = 0;//ProjectPriorities.DemandLoad
             if (slist.Any())
             {
                 foreach (var sinfo in slist)

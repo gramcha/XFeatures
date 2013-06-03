@@ -44,12 +44,12 @@
          must be a menu. -->
     <Groups>
 
-      <Group guid="guidXFeaturesCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Group guid="guidXFeaturesCmdSet" id="SolutionExplorerMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
       </Group>
-      
-
-
+      <Group guid="guidXFeaturesCmdSet" id="EditMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_EDIT"/>
+      </Group>
     </Groups>
     
     <!--Buttons section. -->
@@ -65,14 +65,25 @@
           If you do not want an image next to your command, remove the Icon node or set it to <Icon guid="guidOfficeIcon" id="msotcidNoIcon" /> -->
 
       <Button guid="guidXFeaturesCmdSet" id="cmdidSlnLoadCommand" priority="0x0100" type="Button">
-        <Parent guid="guidXFeaturesCmdSet" id="MyMenuGroup" />
+        <Parent guid="guidXFeaturesCmdSet" id="SolutionExplorerMenuGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
           <CommandName>cmdidSlnLoadCommand</CommandName>
           <ButtonText>Solution Load Settings</ButtonText>
         </Strings>
       </Button>
-
+      
+      <Button guid="guidXFeaturesCmdSet" id="cmdidDupSelection" priority="0x0100" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="EditMenuGroup" />
+        <Icon guid="guidDuplicate" id="bmpPic1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DontCache</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <CommandName>cmdidDupSelection</CommandName>
+          <ButtonText>Duplicate Selection</ButtonText>
+        </Strings>
+      </Button>
 
 
     </Buttons>
@@ -85,12 +96,14 @@
             inside a button definition. An important aspect of this declaration is that the element id 
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
       <Bitmap guid="guidImages" href="Resources\sln.png" usedList="bmpPic1"/>
-
+      <Bitmap guid="guidDuplicate" href="Resources\DuplicateSelection.png" usedList="duplicatepng" />
     </Bitmaps>
  
   </Commands>
 
-
+  <KeyBindings>
+    <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidDupSelection" key1="D" mod1="Alt" editor="guidVSStd97"/>
+  </KeyBindings>
 
 
 
@@ -101,8 +114,11 @@
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidXFeaturesCmdSet" value="{08e48e14-4b8d-43c4-a22d-9116eed8fb8a}">
 
-      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="SolutionExplorerMenuGroup" value="0x1020" />
+      <IDSymbol name="EditMenuGroup" value="0x1021" />
+      
       <IDSymbol name="cmdidSlnLoadCommand" value="0x0100" />
+      <IDSymbol name="cmdidDupSelection" value="0x0200" />
     </GuidSymbol>
     
     
@@ -113,6 +129,9 @@
       <IDSymbol name="bmpPicSearch" value="3" />
       <IDSymbol name="bmpPicX" value="4" />
       <IDSymbol name="bmpPicArrows" value="5" />
+    </GuidSymbol>
+    <GuidSymbol name="guidDuplicate" value="{E3FA78B3-5C81-4012-9F66-00AE447C8135}" >
+      <IDSymbol name="duplicatepng" value="1" />
     </GuidSymbol>
   </Symbols>
 
