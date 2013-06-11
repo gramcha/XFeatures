@@ -1,0 +1,156 @@
+﻿<UserControl x:Class="Atmel.XFeatures.Settings.SettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="885" d:DesignWidth="739" Width="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"   Height="Auto">
+    <Grid>
+        <DockPanel>
+            <DockPanel DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>
+                <TextBlock FontFamily="Courier New" Margin="0,20,0,0" FontSize="35" FontWeight="SemiBold" Foreground="RoyalBlue" >
+                                    Features
+                </TextBlock>
+            </StackPanel>
+                </DockPanel>
+            <DockPanel DockPanel.Dock="Bottom">
+                <Button MaxWidth="100" MaxHeight="100" Margin="0,10,0,10" Click="SaveButton_Click">Save</Button>
+            </DockPanel>
+            <TabControl  Name="tabContainer"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TabStripPlacement="Left">
+                <TabItem Header="Project Enhancements"  >
+                    <!--<StackPanel>
+                        <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>-->
+                    <ListView>
+                        <ListViewItem>                            
+                            <StackPanel>                               
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Solution Management
+                                </TextBlock>
+                                <TextBlock  FontSize="12" FontWeight="SemiBold" DockPanel.Dock="Top" Margin="30,5,0,5">
+                                                Set Project Loading Priority at
+                                </TextBlock>
+                                <RadioButton Name="StudioLevel" DockPanel.Dock="Top" Content="Studio Level(Global - Affects all solutions)"  Margin="45,3,10,0" Click="StudioLevel_Click"></RadioButton>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label DockPanel.Dock="Left" Content="Project Priority" Margin="65,10,0,10" ></Label>
+                                    <ComboBox Name="PriorityCombo" DockPanel.Dock="Top" Margin="10,10,80,10" MinWidth="120">
+                                        <ComboBoxItem Name="demandload">Demand Load</ComboBoxItem>
+                                        <ComboBoxItem Name="bkgndload">Background Load</ComboBoxItem>
+                                        <ComboBoxItem Name="needload">Load If Need</ComboBoxItem>
+                                        <ComboBoxItem Name="explicitload">Explicit Load</ComboBoxItem>
+                                    </ComboBox>
+                                </StackPanel>
+                                <RadioButton Name="SolutionLevel" Content="Solution Level" DockPanel.Dock="Top" Margin="45,0,0,10" Click="SolutionLevel_Click"></RadioButton>
+                                </StackPanel>                                
+                            
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Build Assistance
+                                </TextBlock>
+                                <TextBlock  FontSize="12" FontWeight="SemiBold" DockPanel.Dock="Top" Margin="30,5,0,5">
+                                                Highlight Build Output
+                                </TextBlock>
+                                <CheckBox Name="HighlightOutput" DockPanel.Dock="Top" Margin="45,3,0,5" Content="Enable"   />
+                                <TextBlock  FontSize="12" FontWeight="SemiBold" DockPanel.Dock="Top" Margin="30,5,0,5">
+                                                Baloon Tip Build Notification, when studio minimized
+                                </TextBlock>
+                                <CheckBox Name="BalloonTip" DockPanel.Dock="Top" Margin="45,3,0,5" Content="Enable"   />
+                                <TextBlock  FontSize="12" FontWeight="SemiBold" DockPanel.Dock="Top" Margin="30,5,0,5">
+                                                Taskbar Build Notification(>Win7)
+                                </TextBlock>
+                                <CheckBox Name="Taskbar" DockPanel.Dock="Top" Margin="45,3,0,5" Content="Enable"   />
+                                <TextBlock  FontSize="12" FontWeight="SemiBold" DockPanel.Dock="Top" Margin="30,5,0,5">
+                                                Build Summary Output
+                                </TextBlock>
+                                <CheckBox Name="BuildSummary" DockPanel.Dock="Top" Margin="45,3,0,12" Content="Enable"   />
+                            </StackPanel>
+                        </ListViewItem>
+                    </ListView>
+                        <!--</StackPanel>-->
+                </TabItem>
+                <TabItem Header="Others">
+                    <!--<StackPanel>
+                        <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>-->
+                        <ListView>
+                        <ListViewItem>
+                            <StackPanel>                                
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Duplicate Selection
+                                </TextBlock>
+                                <CheckBox Name="DuplicateSelection" Margin="20,0,0,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Clean Before Build
+                                </TextBlock>
+                                <CheckBox Name="cleanBuild" Margin="20,0,10,10" Content="Enable" Click="cleanBuild_Click"/>
+                                <RadioButton Name="applySln" Margin="40,0,10,10" Content="Apply to solution" Click="applySln_Click" />
+                                <RadioButton Name="applyPrj" Margin="40,0,10,10" Content="Apply to project" Click="applyPrj_Click"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Atmel Studio Shortcut at Desktop Custom Menu
+                                </TextBlock>
+                                <CheckBox Name="Shortcut" Margin="20,0,10,10" Content="Enable" Click="Shortcut_Click" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    RSS Feed Reader
+                                </TextBlock>
+                                <CheckBox Name="RssFeed" Margin="20,0,10,10" Content="Enable"  Click="RssCheckBox_Click"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                    <Label Content="Feed Link" Margin="40,10,0,0"></Label>
+                                    <TextBox Name="link" Margin="45,15,10,10" MinWidth="350" MinHeight="20"></TextBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Refresh for every" Margin="40,10,0,0"></Label>
+                                    <TextBox Name ="time" Margin="7,15,0,18" MinWidth="50" MinHeight="20" PreviewTextInput="NumericOnly" ></TextBox>
+                                    <Label Content="min" Margin="5,15,10,10"></Label>
+                                </StackPanel>
+                            </StackPanel>
+                        </ListViewItem>
+                    </ListView>
+                        <!--</StackPanel>-->
+                </TabItem>
+                <TabItem Header="Sample" Name="tabItem1">
+                    <StackPanel>
+                        <!--<StackPanel Orientation="Horizontal">
+                            <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>
+                            <TextBlock FontFamily="Courier New" Margin="10" FontSize="25" FontWeight="SemiBold" Foreground="BlueViolet">
+                                    XFeatures
+                            </TextBlock>
+                        </StackPanel>-->
+                        <ListView >
+                            <ListViewItem>
+                                <StackPanel>
+                                    <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    RSS Feed Reader
+                                    </TextBlock>
+                                    <CheckBox Name="RssFeed2" Margin="20,0,10,10" Content="Enable"  Click="RssCheckBox_Click"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                        <Label Content="Feed Link" Margin="40,10,0,0"></Label>
+                                        <TextBox Name="link2" Margin="45,15,10,10" MinWidth="350" MinHeight="20"></TextBox>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Refresh for every" Margin="40,10,0,0"></Label>
+                                        <TextBox Name ="time2" Margin="7,15,0,18" MinWidth="50" MinHeight="20" PreviewTextInput="NumericOnly" ></TextBox>
+                                        <Label Content="min" Margin="5,15,10,10"></Label>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>
+                        </ListView>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </Grid>
+</UserControl>

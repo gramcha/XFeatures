@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Atmel.XFeatures.Settings;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -32,21 +33,29 @@ namespace Atmel.XFeatures
         }
         public int OnBeforeOpenProject(ref Guid guidProjectID, ref Guid guidProjectType, string pszFileName, IVsSolutionLoadManagerSupport pSLMgrSupport)
         {
-            var slist = SolutionUtilityMgr.ReadSolutionPriorityList();
             uint projpriority = 0;//ProjectPriorities.DemandLoad
-            if (slist.Any())
+            if (SettingsProvider.IsStudioPriorityLevel())
             {
-                foreach (var sinfo in slist)
+                projpriority = (uint) SettingsManager.XSettings.PLevels;
+            }
+            else
+            {
+                var slist = SolutionUtilityMgr.ReadSolutionPriorityList();
+                if (slist.Any())
                 {
-                    if (pszFileName.Contains(sinfo.Path))
+                    foreach (var sinfo in slist)
                     {
-                        projpriority = (uint)sinfo.ProjectPriorities;
-                        Debug.WriteLine("match found");
-                        break;
+                        if (pszFileName.Contains(sinfo.Path))
+                        {
+                            projpriority = (uint)sinfo.ProjectPriorities;
+                            Debug.WriteLine("match found");
+                            break;
+                        }
                     }
                 }
             }
-            Debug.WriteLine("projpriority of " + pszFileName +" "+ projpriority.ToString());
+            
+            //Debug.WriteLine("projpriority of " + pszFileName +" "+ projpriority.ToString());
             pSLMgrSupport.SetProjectLoadPriority(guidProjectID, projpriority);// (uint)_VSProjectLoadPriority.PLP_BackgroundLoad);             
             return VSConstants.S_OK;
         }

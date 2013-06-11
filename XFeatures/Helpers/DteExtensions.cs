@@ -12,12 +12,12 @@ using Microsoft.VisualStudio.Editor;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.ComponentModelHost;
 using EnvDTE80;
-namespace Company.XFeatures.Helpers
+namespace Atmel.XFeatures.Helpers
 {
     internal static class DteExtensions
     {
-        static DTE2 dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
-        static DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+        static readonly DTE2 dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
+        static readonly DTE dte = Package.GetGlobalService(typeof(DTE)) as DTE;
         public static DTE2 DTE2 
         { 
             get { return dte2; }            
@@ -26,7 +26,7 @@ namespace Company.XFeatures.Helpers
         {
             get { return dte; }
         }
-        public static ProjectItem GetActiveProjectItem(this DTE dte)
+        public static ProjectItem GetActiveProjectItem()
         {
             try
             {
@@ -39,11 +39,11 @@ namespace Company.XFeatures.Helpers
             return (ProjectItem)null;
         }
 
-        public static Project GetActiveProject(this DTE dte)
+        public static Project GetActiveProject()
         {
             try
             {
-                ProjectItem activeProjectItem = DteExtensions.GetActiveProjectItem(dte);
+                ProjectItem activeProjectItem = DteExtensions.GetActiveProjectItem();
                 if (activeProjectItem != null)
                     return activeProjectItem.ContainingProject;
             }
@@ -53,15 +53,15 @@ namespace Company.XFeatures.Helpers
             return (Project)null;
         }
 
-        public static System.IServiceProvider ToIServiceProvider(this DTE dte)
+        public static System.IServiceProvider ToIServiceProvider()
         {
             return (System.IServiceProvider)new ServiceProvider(dte as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
         }
         
-        public static IWpfTextView GetActiveTextView(this DTE dte, IVsEditorAdaptersFactoryService AdaptersFactory)
+        public static IWpfTextView GetActiveTextView( IVsEditorAdaptersFactoryService AdaptersFactory)
         {
         
-            IVsTextManager service = IServiceProviderExtensions.GetService<SVsTextManager, IVsTextManager>(DteExtensions.ToIServiceProvider(dte));
+            IVsTextManager service = IServiceProviderExtensions.GetService<SVsTextManager, IVsTextManager>(DteExtensions.ToIServiceProvider());
             IVsTextView ppView = (IVsTextView)null;
             service.GetActiveView(1, (IVsTextBuffer)null, out ppView);
             if (ppView != null)

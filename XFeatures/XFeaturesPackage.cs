@@ -15,7 +15,7 @@ using System.Windows.Forms;
 //using System.Collections.Generic;
 
 using Microsoft.VisualStudio.Editor;
-using Company.XFeatures.Helpers;
+using Atmel.XFeatures.Helpers;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +25,9 @@ using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text;
 //using BlueOnionSoftware;
-
+using Atmel.XFeatures.RSSFeedReader;
+using Atmel.XFeatures.AStudioShortcut;
+using Atmel.XFeatures.Settings;
 namespace Atmel.XFeatures
 {
     /// <summary>
@@ -48,7 +50,8 @@ namespace Atmel.XFeatures
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideAutoLoad("{ADFC4E64-0397-11D1-9F4E-00A0C911004F}")] // UICONTEXT_EmptySolution
     [Guid(GuidList.guidXFeaturesPkgString)]
-
+    [ProvideToolWindow(typeof(RSSViewerWindow), Style = VsDockStyle.MDI, MultiInstances = true)]
+    [ProvideToolWindow(typeof(SettingsWindow), Style = VsDockStyle.MDI, MultiInstances = true)]
 
     //[DefaultRegistryRoot("Software\\Atmel\\AtmelStudio\\6.1")]
     
@@ -96,7 +99,8 @@ namespace Atmel.XFeatures
             {
                 // Create the command for the menu item.
                 CommandID menuCommandID = new CommandID(GuidList.guidXFeaturesCmdSet, (int)PkgCmdIDList.cmdidSlnLoadCommand);
-                MenuCommand menuItem = new MenuCommand(SolutionLoadSettingsMenuCommandCallback, menuCommandID);
+                OleMenuCommand menuItem = new OleMenuCommand(SolutionLoadSettingsMenuCommandCallback, menuCommandID);
+                menuItem.BeforeQueryStatus +=new EventHandler(SolutionLoadBeforeQueryStatus);
                 mcs.AddCommand( menuItem );
 
                 CommandID menuCommandID2 = new CommandID(GuidList.guidXFeaturesCmdSet, (int)PkgCmdIDList.cmdidDupSelection);
@@ -104,10 +108,19 @@ namespace Atmel.XFeatures
                 menuItem2.BeforeQueryStatus += new EventHandler(DuplicateSelection_BeforeQueryStatus);
                 mcs.AddCommand(menuItem2);
 
+                CommandID menuCommandID3 = new CommandID(GuidList.guidXFeaturesCmdSet, (int)PkgCmdIDList.cmdidRssFeedViewer);
+                OleMenuCommand menuItem3 = new OleMenuCommand(RSSFeedViewerMenuCallback, menuCommandID3);
+                menuItem3.BeforeQueryStatus +=new EventHandler(RssFeedViewer_BeforeQueryStatus);
+                mcs.AddCommand(menuItem3);
+
+                CommandID menuCommandID4 = new CommandID(GuidList.guidXFeaturesCmdSet, (int)PkgCmdIDList.cmdidXFeaturesSettings);
+                MenuCommand menuItem4 = new MenuCommand(XFeaturesSettingsMenuCallback, menuCommandID4);
+                mcs.AddCommand(menuItem4);
             }
             var componentModel = (IComponentModel)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SComponentModel));
             AdaptersFactory = componentModel.GetService<IVsEditorAdaptersFactoryService>();
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Leaving Initialize() of: {0}", this.ToString()));
+            //AtmelStudioShortcut.SetAtmelStudioShortcutCustomMenu(false);
         }
         #endregion
         [Import]
@@ -122,12 +135,21 @@ namespace Atmel.XFeatures
             SolutionLoadSettings sets = new SolutionLoadSettings();
             sets.ShowDialog();
         }
+        private void RSSFeedViewerMenuCallback(object sender, EventArgs e)
+        {
+            DisplayRSSViewer();
+        }
+        private void XFeaturesSettingsMenuCallback(object sender, EventArgs e)
+        {
+            DisplaySettings();
+        }
+
         void DuplicateSelection_BeforeQueryStatus(object sender, EventArgs e)
         {
             var command = sender as OleMenuCommand;
             if (null != command)
             {
-                if (StudioUtility.IsEditorWindow())
+                if (StudioUtility.IsEditorWindow() && SettingsProvider.IsDuplicateSelectionEnabled())
                 {
                     command.Enabled = true;
                     command.Visible = true;
@@ -139,14 +161,38 @@ namespace Atmel.XFeatures
                 }
             }
         }
-        private void DuplicateSelectionMenuCallback(object sender, EventArgs e)
+        void SolutionLoadBeforeQueryStatus(object sender, EventArgs e)
         {
-            //StudioUtility.Duplicate(dte, AdaptersFactory);
-            Duplicate(dte, AdaptersFactory);
+            //var command = sender as OleMenuCommand;
+            //if (null != command)
+            //{
+                
+            //}
         }
-        private void Duplicate(/*IWpfTextView _view*/DTE dte, IVsEditorAdaptersFactoryService AdaptersFactory)
+        void RssFeedViewer_BeforeQueryStatus(object sender, EventArgs e)
         {
-            IWpfTextView _view = DteExtensions.GetActiveTextView(dte, AdaptersFactory);
+             var command = sender as OleMenuCommand;
+             if (null != command)
+             {
+                 if (SettingsProvider.IsRssFeedViewerEnabled())
+                 {
+                     command.Enabled = true;
+                     command.Visible = true;
+                 }
+                 else
+                 {
+                     command.Enabled = false;
+                     command.Visible = false;
+                 }
+             }
+        }
+        private void DuplicateSelectionMenuCallback(object sender, EventArgs e)
+        {            
+            Duplicate();
+        }
+        private void Duplicate()
+        {
+            IWpfTextView _view = DteExtensions.GetActiveTextView(AdaptersFactory);
             if (_view == null)
                 return;
 
@@ -207,6 +253,65 @@ namespace Atmel.XFeatures
                 _view.Selection.Select(newAnchor, newActive);
                 _view.Caret.MoveTo(newActive, PositionAffinity.Predecessor);
             }
+        }
+        private ToolWindowPane CreateToolWindow(ToolWindowType type)
+        {
+            for (int i = 0; ; i++)
+            {
+                //Find Existing windows.
+                ToolWindowPane currentwnd = null;
+                switch (type)
+                {
+                    case ToolWindowType.RSSFeed:
+                        currentwnd = this.FindToolWindow(typeof(RSSViewerWindow), i, false);
+                        break;
+                    case ToolWindowType.Settings:
+                        currentwnd = this.FindToolWindow(typeof(SettingsWindow), i, false);
+                        break;
+                }                
+                if (currentwnd == null)
+                {
+                    //Create the window with 1'st free id.
+                    ToolWindowPane wnd = null;
+                    switch (type)
+                    {
+                        case ToolWindowType.RSSFeed:
+                            wnd = this.CreateToolWindow(typeof(RSSViewerWindow), i) as ToolWindowPane;
+                            break;
+                        case ToolWindowType.Settings:
+                            wnd = this.CreateToolWindow(typeof(SettingsWindow), i) as ToolWindowPane;                            
+                            break;
+                    }
+                    //ToolWindowPane wnd = new RSSViewerWindow();
+                    if ((null == wnd) || (null == wnd.Frame))
+                    {
+                        throw new NotSupportedException("Error in window creation");
+                    }
+                    return wnd;
+                }
+                else
+                {
+                    return currentwnd;
+                }
+            }
+        }
+
+        private void DisplayRSSViewer()
+        {
+            ToolWindowPane window = CreateToolWindow(ToolWindowType.RSSFeed);
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
+        private void DisplaySettings()
+        {
+            ToolWindowPane window = CreateToolWindow(ToolWindowType.Settings);
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+        }
+        enum ToolWindowType 
+        {
+            RSSFeed,
+            Settings
         }
     }
    

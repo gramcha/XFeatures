@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -11,7 +10,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Text.RegularExpressions;
 
-namespace Company.XFeatures.ColoredOutput
+namespace Atmel.XFeatures.ColoredOutput
 {
     [Export(typeof(IClassifierProvider))]
     [ContentType("output")]
@@ -53,9 +52,7 @@ namespace Company.XFeatures.ColoredOutput
     
     internal sealed class Colorer : IClassifier
     {
-        private ITextBuffer buffer;
-        private IClassificationTypeRegistryService _classificationTypeRegistry;
-        private IWordListProvider _wordListProviders;
+        private readonly IClassificationTypeRegistryService _classificationTypeRegistry;
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
         private List<Classifier> classifiers;
 
@@ -69,10 +66,7 @@ namespace Company.XFeatures.ColoredOutput
           IClassificationTypeRegistryService classificationTypeRegistry,
           IWordListProvider wordListProviders)
         {
-            buffer = bufferToClassify;
             _classificationTypeRegistry = classificationTypeRegistry;
-            _wordListProviders = wordListProviders;
-            
         }
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {

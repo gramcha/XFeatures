@@ -13,8 +13,11 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Editor;
+using System.Reflection;
+using System.IO;
+using System.Windows.Forms;
 
-namespace Company.XFeatures.Helpers
+namespace Atmel.XFeatures.Helpers
 {
     internal static class StudioUtility
     {
@@ -65,7 +68,7 @@ namespace Company.XFeatures.Helpers
             if (IServiceProviderExtensions.GetService<SVsRunningDocumentTable, IVsRunningDocumentTable>((IServiceProvider)ServiceProvider.GlobalProvider) != null)
             {
                 Guid rguidLogicalView = Guid.Empty;
-                uint grfIDO = 0U;
+                const uint grfIDO = 0U;
                 uint[] pitemidOpen = new uint[1];
                 IVsUIShellOpenDocument service = IServiceProviderExtensions.GetService<SVsUIShellOpenDocument, IVsUIShellOpenDocument>((IServiceProvider)ServiceProvider.GlobalProvider);
                 if (service != null)
@@ -94,7 +97,7 @@ namespace Company.XFeatures.Helpers
             if (service1 != null)
             {
                 Guid rguidLogicalView = Guid.Empty;
-                uint grfIDO = 0U;
+                const uint grfIDO = 0U;
                 uint[] pitemidOpen = new uint[1];
                 uint pgrfRDTFlags;
                 uint pdwReadLocks;
@@ -279,6 +282,42 @@ namespace Company.XFeatures.Helpers
                     }
                     edit.Apply();
                 }
+        }
+        public static string GetStudioName()
+        {
+            try
+            {   
+                return System.Diagnostics.Process.GetCurrentProcess().MainModule.FileVersionInfo.ProductName;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }            
+            return "XFeatures";
+        }
+        public static string GetStudioPath()
+        {
+            try
+            {
+                return System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return string.Empty;
+        }
+        public static string GetStudioVersion()
+        {
+            try
+            {
+                return System.Diagnostics.Process.GetCurrentProcess().MainModule.FileVersionInfo.ProductVersion;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return string.Empty;
         }
     }
 }

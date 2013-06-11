@@ -7,6 +7,7 @@ using System.Collections.Generic;
 //using System.Runtime.InteropServices;
 //using System.ComponentModel.Design;
 //using Microsoft.Win32;
+using Atmel.XFeatures.Settings;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -22,14 +23,20 @@ using System.Drawing;
 using System.IO;
 //using System.Runtime.InteropServices;
 using Standard;
-using Company.XFeatures.Helpers;
+using Atmel.XFeatures.Helpers;
+using System.Diagnostics;
+
 namespace Atmel.XFeatures.BuildNotification
 {
     internal class ASBuildNotifier
     {
         private readonly NotifyIcon notifyIcon = new NotifyIcon();
         private DTE dte;
+        private Events2 events2;
+        //private CommandEvents t;
         private List<string> projectsBuildReport = null;
+        private bool iscleanconfig = false;
+        private bool isprojectscope = false;
         ~ASBuildNotifier()
         {
             notifyIcon.Dispose();
@@ -39,12 +46,17 @@ namespace Atmel.XFeatures.BuildNotification
             if (_dte == null)
                 return;
             dte = _dte;
-            Events2 events2 = dte.Events as Events2;
+            events2 = dte.Events as Events2;
             notifyIcon.BalloonTipClicked += new EventHandler(BalloonTipClicked);
-            events2.BuildEvents.OnBuildBegin += new _dispBuildEvents_OnBuildBeginEventHandler(ASBuildNotifier_OnBuildBegin);
-            events2.BuildEvents.OnBuildDone += ASBuildNotifier_OnBuildDone;
-            events2.BuildEvents.OnBuildProjConfigBegin += new _dispBuildEvents_OnBuildProjConfigBeginEventHandler(ASBuildNotifier_OnBuildProjConfigBegin);
-            events2.BuildEvents.OnBuildProjConfigDone += ASBuildNotifier_OnBuildProjConfigDone;
+            if (events2 != null)
+            {
+
+                //MessageBox.Show("Attach");
+                events2.BuildEvents.OnBuildBegin += new _dispBuildEvents_OnBuildBeginEventHandler(ASBuildNotifier_OnBuildBegin);
+                events2.BuildEvents.OnBuildDone += ASBuildNotifier_OnBuildDone;
+                events2.BuildEvents.OnBuildProjConfigBegin += new _dispBuildEvents_OnBuildProjConfigBeginEventHandler(ASBuildNotifier_OnBuildProjConfigBegin);
+                events2.BuildEvents.OnBuildProjConfigDone += ASBuildNotifier_OnBuildProjConfigDone;
+            }
             InitializeTaskbarList();
             projectsBuildReport = new List<string>();
         }
@@ -64,7 +76,22 @@ namespace Atmel.XFeatures.BuildNotification
         }
         void ASBuildNotifier_OnBuildProjConfigBegin(string Project, string ProjectConfig, string Platform, string SolutionConfig)
         {
+            //MessageBox.Show(Project + "   " + ProjectConfig + "   " + ProjectConfig + "   " + Platform + "   " + SolutionConfig);
             projectBuildStartTime = DateTime.Now;
+            //CleanB4Build
+            if (iscleanconfig == false && isprojectscope==true)
+            {
+                if (SettingsProvider.IsCleanBuildAppliedForProject())
+                {
+                    foreach (Project prj in (dte.Solution.Projects))
+                    {
+                        if (prj.FullName.Contains(Project))
+                            CleanOutputFolder(prj);
+                    }
+                }
+            }
+            isprojectscope = false;
+            iscleanconfig = false;
         }
         private void ASBuildNotifier_OnBuildProjConfigDone(string project, string projectConfig, string platform, string solutionConfig, bool success)
         {
@@ -76,27 +103,31 @@ namespace Atmel.XFeatures.BuildNotification
             projectsBuildReport.Add("  " + time + " | " + (ispass ? "Succeeded" : "Failed   ") + " | " + project + " [" + projectConfig + "|" + platform + "]");
             if (dte == null)
                 return;
-            if (dte.MainWindow.WindowState != vsWindowState.vsWindowStateMinimize)
-                return;
-            notifyIcon.Icon = Icon.ExtractAssociatedIcon(dte.Solution.FullName); //SystemIcons.Application;
-            notifyIcon.Visible = true;            
-            if (success)
-                return;
-            notifyIcon.ShowBalloonTip(10000, "Build Project Failed", project, ToolTipIcon.Error);
+            //if (dte.MainWindow.WindowState != vsWindowState.vsWindowStateMinimize)
+            //    return;
+            //notifyIcon.Icon = Icon.ExtractAssociatedIcon(dte.Solution.FullName); //SystemIcons.Application;
+            //notifyIcon.Visible = true;            
+            //if (success)
+            //    return;
+            //notifyIcon.ShowBalloonTip(10000, "Build Project Failed", project, ToolTipIcon.Error);
         }
 
         private void ASBuildNotifier_OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
             if (dte == null)
-                return;
-            ShowBuildReport();
-            TaskbarUpdateEnd();
-            
-            if (dte.MainWindow.WindowState != vsWindowState.vsWindowStateMinimize)
-                return;
-            notifyIcon.Icon = Icon.ExtractAssociatedIcon(dte.Solution.FullName); //SystemIcons.Application;
-            notifyIcon.Visible = true;
-            notifyIcon.ShowBalloonTip(10000, "Build Completed", /*Path.GetFileName(dte.Solution.FullName)*/" ", ToolTipIcon.Info);
+                return;            
+            if(SettingsProvider.IsBuildSummaryEnabled())
+                ShowBuildReport();
+            if (SettingsProvider.IsTaskbarNotificationEnabled())
+                TaskbarUpdateEnd();
+            if (SettingsProvider.IsBalloonTipEnabled())
+            {
+                if (dte.MainWindow.WindowState != vsWindowState.vsWindowStateMinimize)
+                    return;
+                notifyIcon.Icon = Icon.ExtractAssociatedIcon(dte.Solution.FullName); //SystemIcons.Application;
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(10000, "Build Completed", /*Path.GetFileName(dte.Solution.FullName)*/" ", ToolTipIcon.Info);
+            }
         }
         
 
@@ -167,8 +198,48 @@ namespace Atmel.XFeatures.BuildNotification
         {
             buildStartTime = DateTime.Now;
             projectsBuildReport.Clear();
-            TaskbarUpdateStart();
-
+            if (SettingsProvider.IsTaskbarNotificationEnabled())
+                TaskbarUpdateStart();
+            
+            //CleanB4Build
+            if (action == vsBuildAction.vsBuildActionBuild)
+            {
+                if (SettingsProvider.IsCleanBuildAppliedForSolution() && vsBuildScope.vsBuildScopeSolution == scope)
+                {
+                    foreach (Project prj in (dte.Solution.Projects))
+                    {
+                        CleanOutputFolder(prj);
+                    }
+                }
+                iscleanconfig = false;
+            }
+            else if(action == vsBuildAction.vsBuildActionClean)
+            {
+                iscleanconfig = true;
+            }
+            if (scope == vsBuildScope.vsBuildScopeProject)
+                isprojectscope = true;
+        }
+        void CleanOutputFolder(Project prj)
+        {
+            string Projfolder = Path.GetDirectoryName(prj.FullName);
+            string[] subfolderArray = new string[4] { "Debug", "Release","bin","obj" };
+            foreach (string subfolder in subfolderArray)
+            {
+                try
+                {
+                    DirectoryInfo directoryInfo = new DirectoryInfo(Path.Combine(Projfolder, subfolder));
+                    if (directoryInfo.Exists)
+                    {
+                        MessageBox.Show(Path.Combine(Projfolder, subfolder));
+                        directoryInfo.Delete(true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //MessageBox.Show(ex.Message);
+                }
+            }
         }
     }
 }
