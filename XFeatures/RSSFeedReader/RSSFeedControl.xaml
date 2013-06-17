@@ -1,17 +1,19 @@
-﻿<UserControl x:Class="Atmel.XFeatures.RSSFeedReader.RSSFeedControl"
+﻿<UserControl x:Class="XFeatures.RSSFeedReader.RSSFeedControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             
-             mc:Ignorable="d" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:LoadingControl="clr-namespace:XFeatures.Helpers" mc:Ignorable="d" 
              d:DesignHeight="636" d:DesignWidth="876">
-    <Grid>
+    <Grid>        
         <DockPanel>
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                <TextBox Name="address" MinWidth="300" MinHeight="25" Margin="10,10,0,0"></TextBox>
-                <Button Name="go" MinWidth="40" Margin="10,10,0,0" Click="goButton_Click">Go</Button>
-            </StackPanel>
+            <Grid DockPanel.Dock="Top">
+                <LoadingControl:GifImage x:Name="gifImage" Stretch="None" GifSource="/XFeatures;component/Resources/loading.gif" AutoStart="True" />
+            </Grid>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <TextBox Name="address" Width="500" MinHeight="25" Margin="10,10,0,5"></TextBox>
+                    <Button Name="go" MinWidth="40" Margin="10,10,0,5" Click="goButton_Click">Go</Button>
+                </StackPanel>            
             <ListView DockPanel.Dock="Top" Height="183" HorizontalAlignment="Left" Margin="5,10,20,10" Name="lviewrss" VerticalAlignment="Top" ItemsSource="{Binding FeedCollection}" SelectionChanged="lviewrss_SelectionChanged" MinWidth="856">
                 <ListView.View>
                     <GridView>
@@ -22,7 +24,7 @@
                 </ListView.View>
             </ListView >
             <Frame BorderBrush="Black" DockPanel.Dock="Left" Content="Description"  HorizontalAlignment="Left" Margin="5,0,10,10" Name="Description" MaxWidth="320"/>
-            <WebBrowser  HorizontalAlignment="Left" Name="webBrowser1" VerticalAlignment="Top" />
+            <WebBrowser HorizontalAlignment="Left" Name="webBrowser1" VerticalAlignment="Top" />
         </DockPanel>
         
                 

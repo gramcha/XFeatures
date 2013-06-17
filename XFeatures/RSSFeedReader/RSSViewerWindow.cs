@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Shell;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Atmel.XFeatures.RSSFeedReader
+namespace XFeatures.RSSFeedReader
 {
     class RSSViewerWindow : ToolWindowPane
     {

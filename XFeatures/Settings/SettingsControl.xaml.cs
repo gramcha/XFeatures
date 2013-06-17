@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using Atmel.XFeatures.AStudioShortcut;
+using Microsoft.VisualStudio.ExtensionManager;
+using Microsoft.VisualStudio.Shell;
+using XFeatures.AStudioShortcut;
 
-namespace Atmel.XFeatures.Settings
+namespace XFeatures.Settings
 {
     /// <summary>
     /// Interaction logic for SettingsControl.xaml
@@ -18,7 +21,7 @@ namespace Atmel.XFeatures.Settings
         }
         void InitSettings()
         {
-            var settings = SettingsManager.ReadSettings();
+            var settings = SettingsManager.XSettings;
             if (settings.PriorityLevelScope == PriorityScope.Studio)
             {
                 StudioLevel.IsChecked = true;
@@ -47,13 +50,14 @@ namespace Atmel.XFeatures.Settings
                 SolutionLevel.IsChecked = true;
                 PriorityCombo.IsEnabled = false;
             }
-            HighlightOutput.IsChecked = settings.BuildAssist.HighightBuildOutput;
-            BalloonTip.IsChecked = settings.BuildAssist.BalloonTip;
-            Taskbar.IsChecked = settings.BuildAssist.TaskbarNotification;
-            BuildSummary.IsChecked = settings.BuildAssist.BuildSummary;
-            DuplicateSelection.IsChecked = settings.OtherFeatures.DuplicateSelection;
-            cleanBuild.IsChecked = settings.OtherFeatures.CleanBuild;
-            if (cleanBuild.IsChecked == true)
+            HighlightOutput.IsChecked          = settings.BuildAssist.HighightBuildOutput;
+            BalloonTip.IsChecked               = settings.BuildAssist.BalloonTip;
+            Taskbar.IsChecked                  = settings.BuildAssist.TaskbarNotification;
+            BuildSummary.IsChecked             = settings.BuildAssist.BuildSummary;
+            //CleanVisualAssistCache.IsChecked = settings.CleanupVissualAssist;
+            DuplicateSelection.IsChecked       = settings.OtherFeatures.DuplicateSelection;
+            cleanBuild.IsChecked               = settings.OtherFeatures.CleanBuild;
+            if (cleanBuild.IsChecked           == true)
             {
                 applySln.IsChecked = settings.OtherFeatures.ApplytoSolution;
                 applyPrj.IsChecked = settings.OtherFeatures.ApplytoProject;
@@ -63,8 +67,8 @@ namespace Atmel.XFeatures.Settings
                 applySln.IsEnabled = false;
                 applyPrj.IsEnabled = false;
             }
-            Shortcut.IsChecked = settings.OtherFeatures.StudioShortcut;
-            RssFeed.IsChecked = settings.OtherFeatures.RssFeed;
+            Shortcut.IsChecked    = AtmelStudioShortcut.IsShortcutEnabled();
+            RssFeed.IsChecked     = settings.OtherFeatures.RssFeed;
             if (RssFeed.IsChecked == true)
             {
                 link.Text = settings.OtherFeatures.Link;
@@ -72,11 +76,20 @@ namespace Atmel.XFeatures.Settings
             }
             else
             {
-                link.Text = settings.OtherFeatures.Link;
-                time.Text = settings.OtherFeatures.Minute.ToString(CultureInfo.InvariantCulture);
+                link.Text      = settings.OtherFeatures.Link;
+                time.Text      = settings.OtherFeatures.Minute.ToString(CultureInfo.InvariantCulture);
                 link.IsEnabled = false;
                 time.IsEnabled = false;
             }
+            highlightcurrentline.IsChecked   = settings.OtherFeatures.HighLightCurrentLine;
+            mclickscrolling.IsChecked        = settings.OtherFeatures.MiddleClickScroll;
+            alignassignments.IsChecked       = settings.OtherFeatures.AlignAssignments;
+            mwzoom.IsChecked                 = settings.OtherFeatures.MouseWheelZoom;
+            gselection.IsChecked             = settings.OtherFeatures.GradientSelection;
+            italiccomments.IsChecked         = settings.OtherFeatures.ItalicComments;
+            tripleclick.IsChecked            = settings.OtherFeatures.TripleClick;
+            
+            QueryXFeaturesPath();
         }
 
 
@@ -189,6 +202,7 @@ namespace Atmel.XFeatures.Settings
             settings.BuildAssist.BalloonTip = BalloonTip.IsChecked ?? true;
             settings.BuildAssist.TaskbarNotification = Taskbar.IsChecked ?? true;
             settings.BuildAssist.BuildSummary = BuildSummary.IsChecked ?? true;
+            //settings.CleanupVissualAssist = CleanVisualAssistCache.IsChecked ?? true;
             settings.OtherFeatures.DuplicateSelection = DuplicateSelection.IsChecked ?? true;
             settings.OtherFeatures.CleanBuild = cleanBuild.IsChecked ?? false;
             settings.OtherFeatures.ApplytoSolution = applySln.IsChecked ?? false;
@@ -199,7 +213,14 @@ namespace Atmel.XFeatures.Settings
             if (string.IsNullOrEmpty(time.Text) == true || string.IsNullOrWhiteSpace(time.Text) == true)
                 settings.OtherFeatures.Minute = 5;
             else
-                settings.OtherFeatures.Minute = Convert.ToInt32(time.Text);
+                settings.OtherFeatures.Minute           = Convert.ToInt32(time.Text);
+            settings.OtherFeatures.HighLightCurrentLine = highlightcurrentline.IsChecked ?? true;
+            settings.OtherFeatures.MiddleClickScroll    = mclickscrolling.IsChecked ?? true;
+            settings.OtherFeatures.AlignAssignments     = alignassignments.IsChecked ?? true;
+            settings.OtherFeatures.MouseWheelZoom       = mwzoom.IsChecked ?? true;
+            settings.OtherFeatures.GradientSelection    = gselection.IsChecked ?? true;
+            settings.OtherFeatures.ItalicComments       = italiccomments.IsChecked ?? true;
+            settings.OtherFeatures.TripleClick          = tripleclick.IsChecked ?? true;
             SettingsManager.WriteSettings(settings);
         }
         
@@ -210,5 +231,29 @@ namespace Atmel.XFeatures.Settings
                 cb.IsChecked = !cb.IsChecked;
         }
 
+        void QueryXFeaturesPath()
+        {
+            //XFeatures
+            // Get the Extension Manager service. 
+            try
+            {
+                var extnMgr = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
+                if (extnMgr == null) return;
+
+                IEnumerable<IInstalledExtension> extns = extnMgr.GetEnabledExtensions("XFeatures");
+
+                foreach (var installedExtension in extns)
+                {
+                    var path = System.IO.Path.Combine(installedExtension.InstallPath, "Resources", "XFeatures.htm");
+                    XFeaturesWeb.Navigate(new Uri(path));
+                    break;
+                }    
+            }
+            catch(Exception ex)
+            {
+            }
+        }
+
     }
 }
+//Source="/XFeatures;component/Resources/XFeatures.Htm" 

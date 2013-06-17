@@ -13,5 +13,5 @@
 	1. Duplicate Selection
 	2. Clean before build - yet to start
 	3. Atmel Shortcut at desktop custom menu
-	4. Rss Feed Reader - incomplete
+	4. Rss Feed Reader
 	

@@ -111,7 +111,18 @@
           <ButtonText>XFeatures Options</ButtonText>
         </Strings>
       </Button>
-      
+      <Button guid="guidXFeaturesCmdSet" id="cmdidAlignAssignments" priority="0x0100" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="EditMenuGroup" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DontCache</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <CommandName>cmdidAlignAssignments</CommandName>
+          <ButtonText>Align Assignments</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
    
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -133,6 +144,7 @@
     <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidDupSelection" key1="D" mod1="Alt" editor="guidVSStd97"/>
     <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidRssFeedViewer" key1="R" mod1="Alt" editor="guidVSStd97"/>
     <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidXFeaturesSettings" key1="X" mod1="Alt" editor="guidVSStd97"/>
+    <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidAlignAssignments" key1="VK_OEM_6" mod1="Control Alt" editor="guidVSStd97" />
   </KeyBindings>
 
 
@@ -152,7 +164,8 @@
       <IDSymbol name="cmdidSlnLoadCommand" value="0x0100" />
       <IDSymbol name="cmdidDupSelection" value="0x0200" />
       <IDSymbol name="cmdidRssFeedViewer" value="0x0300" />
-      <IDSymbol name="cmdidXFeaturesSettings" value="0x0400" />      
+      <IDSymbol name="cmdidXFeaturesSettings" value="0x0400" />
+      <IDSymbol name="cmdidAlignAssignments" value="0x0500" />      
     </GuidSymbol>
     
     

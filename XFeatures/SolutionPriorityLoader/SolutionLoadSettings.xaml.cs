@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Atmel.XFeatures.SolutionPriorityLoader
+namespace XFeatures.SolutionPriorityLoader
 {
     /// <summary>
     /// Interaction logic for SolutionLoadSettings.xaml

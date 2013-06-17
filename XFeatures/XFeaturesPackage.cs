@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 using Microsoft.Win32;
@@ -9,13 +10,13 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using EnvDTE;
-using Atmel.XFeatures.SolutionPriorityLoader;
-using Atmel.XFeatures.BuildNotification;
+using XFeatures.SolutionPriorityLoader;
+using XFeatures.BuildNotification;
 using System.Windows.Forms;
 //using System.Collections.Generic;
 
 using Microsoft.VisualStudio.Editor;
-using Atmel.XFeatures.Helpers;
+using XFeatures.Helpers;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,10 +26,10 @@ using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text;
 //using BlueOnionSoftware;
-using Atmel.XFeatures.RSSFeedReader;
-using Atmel.XFeatures.AStudioShortcut;
-using Atmel.XFeatures.Settings;
-namespace Atmel.XFeatures
+using XFeatures.RSSFeedReader;
+using XFeatures.AStudioShortcut;
+using XFeatures.Settings;
+namespace XFeatures
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -72,7 +73,6 @@ namespace Atmel.XFeatures
         {
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
         }
-
         private ASBuildNotifier buildnotifier;
         partial void InitSolutionEvents();
         /////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ namespace Atmel.XFeatures
         /// </summary>
         protected override void Initialize()
         {
-            //MessageBox.Show("Hello");
+            //MessageBox.Show(StudioUtility.GetStudioName()+"  "+ StudioUtility.GetStudioVersion());
             Trace.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
             dte = this.GetService(typeof(DTE)) as DTE;
@@ -121,6 +121,7 @@ namespace Atmel.XFeatures
             AdaptersFactory = componentModel.GetService<IVsEditorAdaptersFactoryService>();
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Leaving Initialize() of: {0}", this.ToString()));
             //AtmelStudioShortcut.SetAtmelStudioShortcutCustomMenu(false);
+           
         }
         #endregion
         [Import]
@@ -188,7 +189,7 @@ namespace Atmel.XFeatures
         }
         private void DuplicateSelectionMenuCallback(object sender, EventArgs e)
         {            
-            Duplicate();
+           Duplicate();
         }
         private void Duplicate()
         {

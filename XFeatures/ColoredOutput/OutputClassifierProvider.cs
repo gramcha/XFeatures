@@ -13,7 +13,7 @@ using System.Windows.Media;
 
 #pragma warning disable 649
 
-namespace Atmel.XFeatures
+namespace XFeatures
 {
     [ContentType("output")]
     [Export(typeof(IClassifierProvider))]
@@ -55,3 +55,4 @@ namespace Atmel.XFeatures
         }
     }
 }
+///http://dotneteers.net/blogs/divedeeper/archive/2008/11/04/LearnVSXNowPart38.aspx 

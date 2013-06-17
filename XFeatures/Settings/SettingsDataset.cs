@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization;
-using Atmel.XFeatures.Helpers;
-namespace Atmel.XFeatures.Settings
+using XFeatures.Helpers;
+namespace XFeatures.Settings
 {
     public enum PriorityScope
     {
@@ -36,6 +36,13 @@ namespace Atmel.XFeatures.Settings
         public bool RssFeed { get; set; }
         public string Link { get; set; }
         public int Minute { get; set; }
+        public bool HighLightCurrentLine;
+        public bool MiddleClickScroll;
+        public bool AlignAssignments;
+        public bool MouseWheelZoom;
+        public bool GradientSelection;
+        public bool ItalicComments;
+        public bool TripleClick;
     }
     [Serializable()]
     public class SettingsDataset : ISerializable
@@ -43,6 +50,7 @@ namespace Atmel.XFeatures.Settings
         public PriorityScope PriorityLevelScope { get; set; }
         public PriorityLevels PLevels { get; set; }
         public BuildAssistance BuildAssist { get; set; }
+        //public bool CleanupVissualAssist { get; set; }
         public Others OtherFeatures { get; set; }
         public SettingsDataset()
         {
@@ -53,6 +61,7 @@ namespace Atmel.XFeatures.Settings
             BuildAssist.BalloonTip = true;
             BuildAssist.TaskbarNotification = true;
             BuildAssist.BuildSummary = true;
+            //CleanupVissualAssist = true;
             OtherFeatures = new Others();
             OtherFeatures.DuplicateSelection = true;
             OtherFeatures.CleanBuild = false;
@@ -62,6 +71,13 @@ namespace Atmel.XFeatures.Settings
             OtherFeatures.RssFeed = false;
             OtherFeatures.Link = "http://www.avrfreaks.net/forumrss.php";
             OtherFeatures.Minute = 5;
+            OtherFeatures.HighLightCurrentLine = true;
+            OtherFeatures.MiddleClickScroll = true;
+            OtherFeatures.AlignAssignments = true;
+            OtherFeatures.MouseWheelZoom = true;
+            OtherFeatures.GradientSelection = true;
+            OtherFeatures.ItalicComments = true;
+            OtherFeatures.TripleClick = true;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -77,7 +93,8 @@ namespace Atmel.XFeatures.Settings
     public delegate void SettingsSourceUpdatedHandler(object o);
     public static class SettingsManager
     {
-        public static string SettingFilePath = Path.Combine(Path.GetDirectoryName(StudioUtility.GetStudioPath()),"XFeatures.xml");
+        public static string SettingFilePath = StudioUtility.GetXFeaturesSettingsFilePath(CreateDefaultSettings());
+            //Path.Combine(Path.GetDirectoryName(StudioUtility.GetStudioPath()),"XFeatures.xml");
         public static event SettingsSourceUpdatedHandler UpdateHandler;
         public static SettingsDataset XSettings
         {

@@ -9,8 +9,9 @@ using System.ComponentModel.Composition;
 using System.Windows.Media;
 using System.Windows;
 using System.Text.RegularExpressions;
+using XFeatures.Settings;
 
-namespace Atmel.XFeatures.ColoredOutput
+namespace XFeatures.ColoredOutput
 {
     [Export(typeof(IClassifierProvider))]
     [ContentType("output")]
@@ -24,9 +25,7 @@ namespace Atmel.XFeatures.ColoredOutput
         //internal ImportInfoCollection<IWordListProvider> wordListProviders
         IWordListProvider wordListProviders 
         { get; set; }
-
-        [Import]
-        internal SVsServiceProvider ServiceProvider;
+        
 
         //public IClassifier GetClassifier(ITextBuffer buffer, IEnvironment context)
         public IClassifier GetClassifier(ITextBuffer buffer)
@@ -106,7 +105,7 @@ namespace Atmel.XFeatures.ColoredOutput
             {
                 var spans = new List<ClassificationSpan>();
                 var snapshot = span.Snapshot;
-                if (snapshot == null || snapshot.Length == 0)
+                if (snapshot == null || snapshot.Length == 0 || SettingsProvider.IsHighightBuildOutputEnabled()==false)
                 {
                     return spans;
                 }
@@ -307,3 +306,4 @@ namespace Atmel.XFeatures.ColoredOutput
         }
     }
 }
+///http://dotneteers.net/blogs/divedeeper/archive/2008/11/04/LearnVSXNowPart38.aspx 

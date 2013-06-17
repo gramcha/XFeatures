@@ -2,7 +2,7 @@
 // MUST match PkgCmdID.h
 using System;
 
-namespace Atmel.XFeatures
+namespace XFeatures
 {
     static class PkgCmdIDList
     {
@@ -10,5 +10,6 @@ namespace Atmel.XFeatures
         public const uint cmdidDupSelection = 0x200;
         public const uint cmdidRssFeedViewer = 0x300;
         public const uint cmdidXFeaturesSettings = 0x400;
+        public const uint cmdidAlignAssignments = 0x0500;
     };
 }

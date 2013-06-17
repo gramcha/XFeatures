@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,11 +20,12 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Collections.ObjectModel;
 using System.IO;
-using Atmel.XFeatures.Settings;
+using XFeatures.Helpers;
+using XFeatures.Settings;
 using System.ServiceModel.Syndication;
 using System.ComponentModel;
 
-namespace Atmel.XFeatures.RSSFeedReader
+namespace XFeatures.RSSFeedReader
 {
     /// <summary>
     /// Interaction logic for RSSFeedControl.xaml
@@ -34,17 +36,21 @@ namespace Atmel.XFeatures.RSSFeedReader
         /// http://en.wikipedia.org/wiki/RSS
         /// </summary>
 
-        private string rssUrl ="http://www.avrfreaks.net/forumrss.php";// "http://asf.atmel.com/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&content=&product=Atmel%20Studio%206&query_format=specific&title=Bug%20List&ctype=atom";
+        private string rssUrl ="http://www.avrfreaks.net/forumrss.php";// "http://asf.com/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&content=&product=Atmel%20Studio%206&query_format=specific&title=Bug%20List&ctype=atom";
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-        ObservableCollection<RSSFeedDataset> rssfeedcollection =
-       new ObservableCollection<RSSFeedDataset>();
+        //System.Windows.Threading.DispatcherTimer btntimer = new System.Windows.Threading.DispatcherTimer();
+        //ObservableCollection<RSSFeedDataset> rssfeedcollection = new ObservableCollection<RSSFeedDataset>();
+        ItemCollection<RSSFeedDataset> rssfeedcollection = new ItemCollection<RSSFeedDataset>();
+        List<RSSFeedDataset> list = new List<RSSFeedDataset>();
         private bool istimerrunning = false;
         Object thisLock = new Object();
         private string recenturl;
-
+        private bool manualclick = false;
+        private bool loading = false;
         //private readonly BackgroundWorker worker = new BackgroundWorker();
+        ManualResetEventSlim slimEvent = new ManualResetEventSlim();
 
-        public ObservableCollection<RSSFeedDataset> FeedCollection
+        public ItemCollection<RSSFeedDataset> FeedCollection
         {
             get { return rssfeedcollection; 
             }
@@ -58,17 +64,25 @@ namespace Atmel.XFeatures.RSSFeedReader
         void init()
         {
             dispatcherTimer.Tick += new EventHandler(DispatcherTimerRssFeedAutoUpdate);
+            //btntimer.Tick += new EventHandler(DispatcherTimerRssFeedAutoUpdate);
+            //btntimer.Interval = new TimeSpan(0, 0, 0, 0, 1000);
             recenturl = SettingsProvider.GetRssFeedUrl();
-            GetFeeds(recenturl);
+            address.Text = recenturl;
             SettingsManager.UpdateHandler += UpdateRSSFeed;
+            //This code comment so that window immediately visible. User has to press go.
+            rssfeedcollection.BeginUpdate();
+            var task = (new Task(new Action(ReadWebServer)));
+            task.ContinueWith(new Action<Task>((Task t) => this.Dispatcher.BeginInvoke(new Action(UpdateCollection))));
+            task.Start();
         }
         private void UpdateRSSFeed(object o)
         {
             if (recenturl.Equals(SettingsProvider.GetRssFeedUrl())==false)
             {
                 recenturl = SettingsProvider.GetRssFeedUrl();
-                GetFeeds(recenturl);
                 address.Text = recenturl;
+                //GetFeeds(recenturl);
+                DispatcherTimerRssFeedAutoUpdate(o, null);
             }
         }
 
@@ -76,9 +90,12 @@ namespace Atmel.XFeatures.RSSFeedReader
         {
             if (istimerrunning == false)
             {
-                dispatcherTimer.Interval = new TimeSpan(0, SettingsProvider.GetRssFeedUpdateTime(), 0);
-                dispatcherTimer.Start();
-                istimerrunning = true;
+                if (SettingsProvider.GetRssFeedUpdateTime() > 0)
+                {
+                    dispatcherTimer.Interval = new TimeSpan(0, SettingsProvider.GetRssFeedUpdateTime(), 0);
+                    dispatcherTimer.Start();
+                    istimerrunning = true;
+                }
             }
         }
 
@@ -93,13 +110,89 @@ namespace Atmel.XFeatures.RSSFeedReader
 
         private void DispatcherTimerRssFeedAutoUpdate(object sender, EventArgs e)
         {
-            new Thread(sample).Start(recenturl);// .GetFeeds(recenturl);
+            rssfeedcollection.BeginUpdate();
+            StopTimer();
+            StartLoadingSign();
+            if(rssfeedcollection.Any())
+                rssfeedcollection.Clear();
+            var task = (new Task(new Action(ReadWebServer)));
+            task.ContinueWith(new Action<Task>((Task t) => this.Dispatcher.BeginInvoke(new Action(UpdateCollection))));
+            task.Start();
         }
-        void sample(object o)
+        void ReadWebServer()
         {
-            GetFeeds((string) o);
+            lock (thisLock)
+            //slimEvent.Reset();
+            {
+                GetFeeds(recenturl);
+                slimEvent.Set();
+            }
+        }
+        void UpdateCollection()
+        {
+            lock (thisLock)
+            //slimEvent.Wait();
+            {
+                foreach (var item in list)
+                {
+                    rssfeedcollection.Add(item);
+                }
+                rssfeedcollection.EndUpdate();
+                StartTimer();
+                StopLoadingSign();
+            }
+        }
+        void StartLoadingSign()
+        {
+            gifImage.StartAnimation();
+            gifImage.Visibility = Visibility.Visible;
+            loading = true;
+        }
+        void StopLoadingSign()
+        {
+            gifImage.StopAnimation();
+            gifImage.Visibility = Visibility.Hidden;
+            loading = false;
         }
 
+        private void GetFeeds(string url)
+        {
+            lock (thisLock)
+            {
+                //rssfeedcollection.Clear();
+                if (TryRSSFormat(url) == false)
+                {
+                    if (TryAtomFormat(url) == false)
+                        return;
+                }
+                if (manualclick == true)
+                {
+                    UpdateXSettingsFile(url);
+                    manualclick = false;
+                }
+
+            }
+        }
+        void ManualUpdate()
+        {
+            rssfeedcollection.BeginUpdate();
+            StopTimer();
+            StartLoadingSign();
+            if (rssfeedcollection.Any())
+                rssfeedcollection.Clear();
+            //(new Task(new Action(ReadWebServer))).Start();
+            //Dispatcher.CurrentDispatcher.Invoke(new Action(UpdateCollection));
+            var task = (new Task(new Action(ReadWebServer)));
+            task.ContinueWith(new Action<Task>((Task t) => this.Dispatcher.BeginInvoke(new Action(UpdateCollection))));
+            task.Start();
+        }
+
+        private void goButton_Click(object sender, RoutedEventArgs e)
+        {
+            recenturl = address.Text;
+            manualclick = true;
+            ManualUpdate();
+        }
         private bool TryRSSFormat(string url)
         {
             if (string.IsNullOrEmpty(url) || string.IsNullOrWhiteSpace(url))
@@ -126,7 +219,7 @@ namespace Atmel.XFeatures.RSSFeedReader
             }
             // get an xpath navigator   
             XPathNavigator navigator = doc.CreateNavigator();
-            List<RSSFeedDataset> list = new List<RSSFeedDataset>();
+            list.Clear();
             //Dictionary<string, RSSFeedDataset> list = new Dictionary<string, RSSFeedDataset>();
             try
             {
@@ -204,16 +297,16 @@ namespace Atmel.XFeatures.RSSFeedReader
                 //{
                 //    rssfeedcollection.Add(item);
                 //}
-                if (list.Any())
-                {
-                    Dispatcher.CurrentDispatcher.Invoke(new Action<object>((Action) =>
-                                                                               {
-                                                                                   foreach (var item in list)
-                                                                                   {
-                                                                                       rssfeedcollection.Add(item);
-                                                                                   }
-                                                                               }));
-                }
+                //if (list.Any())
+                //{
+                //    Dispatcher.CurrentDispatcher.Invoke(new Action<object>((Action) =>
+                //                                                               {
+                //                                                                   foreach (var item in list)
+                //                                                                   {
+                //                                                                       rssfeedcollection.Add(item);
+                //                                                                   }
+                //                                                               }));
+                //}
             }
             catch (Exception ex)
             {
@@ -245,7 +338,8 @@ namespace Atmel.XFeatures.RSSFeedReader
                     DateTime date = DateTime.Now;
                     if (feed != null)
                     {
-                        List<RSSFeedDataset> list = new List<RSSFeedDataset>();
+                        //List<RSSFeedDataset> list = new List<RSSFeedDataset>();
+                        list.Clear();
                         foreach (var nodeitem in feed.Items)
                         {
                             // Work with the Title and PubDate properties of the FeedItem
@@ -259,6 +353,11 @@ namespace Atmel.XFeatures.RSSFeedReader
                             {
                                 //item.Summary.Text
                                 item.Description = nodeitem.Summary.Text;
+                                if (nodeitem.Content != null)
+                                {
+                                    item.Description +=
+                                        ((System.ServiceModel.Syndication.TextSyndicationContent)(nodeitem.Content)).Text;
+                                }
                             }
                             else
                             {
@@ -269,7 +368,7 @@ namespace Atmel.XFeatures.RSSFeedReader
                                 }
                             }
                             list.Add(item);
-                            rssfeedcollection.Add(item);
+                            //rssfeedcollection.Add(item);
                             
                         }
                         //if (list.Any())
@@ -291,7 +390,7 @@ namespace Atmel.XFeatures.RSSFeedReader
                         //}
                     }
                 }
-                if (rssfeedcollection.Any() == false)
+                if (list.Any() == false)
                     return false;
             }
             catch (Exception ex)
@@ -303,28 +402,7 @@ namespace Atmel.XFeatures.RSSFeedReader
             return true;
         }
 
-        private void GetFeeds(string url, bool manualchange=false)
-        {
-            //this.Cursor = Cursors.Wait;
-            StopTimer();
-            lock (thisLock)
-            {
-                rssfeedcollection.Clear();
-                
-                if (TryRSSFormat(url) == false)
-                {
-                    if (TryAtomFormat(url) == false)
-                        return;
-                }
-                if(manualchange == true)
-                {
-                    UpdateXSettingsFile(url);
-                }
-            }
-            StartTimer();
-            //// return the cursor
-            //this.Cursor = Cursors.Arrow;
-        }
+        
         private void UpdateXSettingsFile(string url)
         {
             SettingsManager.XSettings.OtherFeatures.Link = url;
@@ -335,8 +413,11 @@ namespace Atmel.XFeatures.RSSFeedReader
         {
             try
             {
+                if (loading)
+                    return;
                 lock (thisLock)
                 {
+                    
                     var item = (RSSFeedDataset)lviewrss.SelectedItem;
                     if (item == null)
                         return;
@@ -345,7 +426,7 @@ namespace Atmel.XFeatures.RSSFeedReader
                     // Only absolute URIs can be navigated to
                     if (!uri.IsAbsoluteUri)
                     {
-                        MessageBox.Show("The Address URI must be absolute eg 'http://www.atmel.com'");
+                        MessageBox.Show("The Address URI must be absolute eg 'http://www.com'");
                         return;
                     }
                     //MessageBox.Show(item.Description);
@@ -365,11 +446,6 @@ namespace Atmel.XFeatures.RSSFeedReader
                 MessageBox.Show(ex.Message,"Atmel Studio - Selection Changed");
             }
             
-        }
-
-        private void goButton_Click(object sender, RoutedEventArgs e)
-        {
-            GetFeeds(address.Text,true);
         }
     }
 }

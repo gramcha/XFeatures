@@ -7,7 +7,7 @@ using System.Collections.Generic;
 //using System.Runtime.InteropServices;
 //using System.ComponentModel.Design;
 //using Microsoft.Win32;
-using Atmel.XFeatures.Settings;
+using XFeatures.Settings;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -23,10 +23,10 @@ using System.Drawing;
 using System.IO;
 //using System.Runtime.InteropServices;
 using Standard;
-using Atmel.XFeatures.Helpers;
+using XFeatures.Helpers;
 using System.Diagnostics;
 
-namespace Atmel.XFeatures.BuildNotification
+namespace XFeatures.BuildNotification
 {
     internal class ASBuildNotifier
     {
@@ -231,7 +231,7 @@ namespace Atmel.XFeatures.BuildNotification
                     DirectoryInfo directoryInfo = new DirectoryInfo(Path.Combine(Projfolder, subfolder));
                     if (directoryInfo.Exists)
                     {
-                        MessageBox.Show(Path.Combine(Projfolder, subfolder));
+                        //MessageBox.Show(Path.Combine(Projfolder, subfolder));
                         directoryInfo.Delete(true);
                     }
                 }

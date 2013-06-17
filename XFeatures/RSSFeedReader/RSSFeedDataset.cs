@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Atmel.XFeatures.RSSFeedReader
+namespace XFeatures.RSSFeedReader
 {
     public class RSSFeedDataset
     {

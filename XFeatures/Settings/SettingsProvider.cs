@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Atmel.XFeatures.Settings
+namespace XFeatures.Settings
 {
     public static class SettingsProvider
     {
@@ -55,6 +55,46 @@ namespace Atmel.XFeatures.Settings
             if (SettingsManager.XSettings.OtherFeatures.CleanBuild == false)
                 return false;
             return SettingsManager.XSettings.OtherFeatures.ApplytoProject;
+        }
+
+        //public static bool IsCleanVissualAssistEnabled()
+        //{
+        //    return SettingsManager.XSettings.CleanupVissualAssist;
+        //}
+
+        public static bool IsHighlightCurrentLineEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.HighLightCurrentLine;
+        }
+
+        public static bool IsMiddleClickScrollEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.MiddleClickScroll;
+        }
+
+        public static bool IsAlignAssignmentsEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.AlignAssignments;
+        }
+
+        public static bool IsMouseWheelZoomEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.MouseWheelZoom;
+        }
+
+        public static bool IsGradientSelectionEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.GradientSelection;
+        }
+
+        public static bool IsItalicCommentsEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.ItalicComments;
+        }
+
+        public static bool IsTripleClickSelectionEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.TripleClick;
         }
     }
 }

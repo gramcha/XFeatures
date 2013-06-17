@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Atmel.XFeatures.Settings;
+using XFeatures.Settings;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Atmel.XFeatures.SolutionPriorityLoader;
+using XFeatures.SolutionPriorityLoader;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace Atmel.XFeatures
+namespace XFeatures
 {
     public sealed partial class XFeaturesPackage : IVsSolutionLoadManager, IVsSolutionEvents
     {

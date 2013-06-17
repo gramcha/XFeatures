@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Win32;
-using Atmel.XFeatures.Helpers;
+using XFeatures.Helpers;
 using System.Windows.Forms;
 using System.Security;
-namespace Atmel.XFeatures.AStudioShortcut
+namespace XFeatures.AStudioShortcut
 {
     public static class AtmelStudioShortcut
     {
@@ -56,6 +56,20 @@ namespace Atmel.XFeatures.AStudioShortcut
             catch (SecurityException ex)
             {
                 MessageBox.Show(Resources.AtmelStudioShortcut_SetAtmelStudioShortcutCustomMenu_Run_studio_as_admin);
+            }
+            return false;
+        }
+        public static bool IsShortcutEnabled()
+        {
+            RegistryKey keylevel1 = Registry.ClassesRoot.OpenSubKey("DesktopBackground");
+            if (keylevel1 != null)
+            {
+                var keylevel2 = keylevel1.OpenSubKey("Shell");
+                string ShortcutName = StudioUtility.GetStudioName() + " " + StudioUtility.GetStudioVersion();
+                if (keylevel2 != null && keylevel2.OpenSubKey(ShortcutName) != null)
+                {
+                    return true;
+                }
             }
             return false;
         }

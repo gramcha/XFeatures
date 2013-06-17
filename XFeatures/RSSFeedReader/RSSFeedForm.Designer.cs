@@ -1,4 +1,4 @@
-﻿namespace Atmel.XFeatures.RSSFeedReader
+﻿namespace XFeatures.RSSFeedReader
 {
     partial class RSSFeedForm
     {

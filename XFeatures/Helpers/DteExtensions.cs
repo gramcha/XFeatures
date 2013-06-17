@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.Editor;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.ComponentModelHost;
 using EnvDTE80;
-namespace Atmel.XFeatures.Helpers
+namespace XFeatures.Helpers
 {
     internal static class DteExtensions
     {

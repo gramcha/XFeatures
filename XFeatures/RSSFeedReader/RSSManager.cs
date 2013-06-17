@@ -5,8 +5,8 @@ using System.Text;
 using Microsoft.VisualStudio.Shell;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.Shell.Interop;
-using Atmel.XFeatures.RSSFeedReader;
-namespace Atmel.XFeatures
+using XFeatures.RSSFeedReader;
+namespace XFeatures
 {
     public sealed partial class XFeaturesPackage : Package
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Windows.Data;
 
-namespace Atmel.XFeatures.SolutionPriorityLoader
+namespace XFeatures.SolutionPriorityLoader
 {
     class SolutionLoadSettingViewModel
     {

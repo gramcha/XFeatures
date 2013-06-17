@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using EnvDTE;
-namespace Atmel.XFeatures.SolutionPriorityLoader
+namespace XFeatures.SolutionPriorityLoader
 {
     public class Container
     {

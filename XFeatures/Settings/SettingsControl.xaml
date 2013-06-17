@@ -1,20 +1,23 @@
-﻿<UserControl x:Class="Atmel.XFeatures.Settings.SettingsControl"
+﻿<UserControl x:Class="XFeatures.Settings.SettingsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="885" d:DesignWidth="739" Width="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"   Height="Auto">
+             d:DesignHeight="1085" d:DesignWidth="739" Width="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"   Height="Auto">
     <Grid>
         <DockPanel>
             <DockPanel DockPanel.Dock="Top">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>
-                <TextBlock FontFamily="Courier New" Margin="0,20,0,0" FontSize="35" FontWeight="SemiBold" Foreground="RoyalBlue" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>
+                    <TextBlock FontFamily="Courier New" Margin="0,20,0,0" FontSize="35" FontWeight="SemiBold" Foreground="RoyalBlue" >
                                     Features
-                </TextBlock>
-            </StackPanel>
-                </DockPanel>
+                    </TextBlock>
+                    <TextBlock  FontSize="9" FontWeight="SemiBold" Foreground="Red" Margin="0,40,0,0" Height="20" Width="201">
+                                    Beta Ver 1.1
+                    </TextBlock>
+                </StackPanel>
+            </DockPanel>
             <DockPanel DockPanel.Dock="Bottom">
                 <Button MaxWidth="100" MaxHeight="100" Margin="0,10,0,10" Click="SaveButton_Click">Save</Button>
             </DockPanel>
@@ -23,8 +26,8 @@
                     <!--<StackPanel>
                         <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>-->
                     <ListView>
-                        <ListViewItem>                            
-                            <StackPanel>                               
+                        <ListViewItem>
+                            <StackPanel>
                                 <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
                                     Solution Management
                                 </TextBlock>
@@ -42,8 +45,8 @@
                                     </ComboBox>
                                 </StackPanel>
                                 <RadioButton Name="SolutionLevel" Content="Solution Level" DockPanel.Dock="Top" Margin="45,0,0,10" Click="SolutionLevel_Click"></RadioButton>
-                                </StackPanel>                                
-                            
+                            </StackPanel>
+
                         </ListViewItem>
                         <ListViewItem>
                             <StackPanel>
@@ -68,21 +71,6 @@
                                 <CheckBox Name="BuildSummary" DockPanel.Dock="Top" Margin="45,3,0,12" Content="Enable"   />
                             </StackPanel>
                         </ListViewItem>
-                    </ListView>
-                        <!--</StackPanel>-->
-                </TabItem>
-                <TabItem Header="Others">
-                    <!--<StackPanel>
-                        <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>-->
-                        <ListView>
-                        <ListViewItem>
-                            <StackPanel>                                
-                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
-                                    Duplicate Selection
-                                </TextBlock>
-                                <CheckBox Name="DuplicateSelection" Margin="20,0,0,10" Content="Enable" />
-                            </StackPanel>
-                        </ListViewItem>
                         <ListViewItem>
                             <StackPanel>
                                 <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
@@ -93,6 +81,95 @@
                                 <RadioButton Name="applyPrj" Margin="40,0,10,10" Content="Apply to project" Click="applyPrj_Click"/>
                             </StackPanel>
                         </ListViewItem>
+                        <!--<ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Vissual Assist 
+                                </TextBlock>
+                                <TextBlock  FontSize="12" FontWeight="SemiBold" DockPanel.Dock="Top" Margin="30,5,0,5">
+                                                Cleanup Visual Assist Cache
+                                </TextBlock>
+                                <CheckBox Name="CleanVisualAssistCache" DockPanel.Dock="Top" Margin="45,3,0,5" Content="Enable"   />                                
+                            </StackPanel>
+                        </ListViewItem>-->
+                    </ListView>
+                    <!--</StackPanel>-->
+                </TabItem>
+                <TabItem Header="Editor Enhancements">
+                    <!--<StackPanel>
+                        <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>-->
+                    <ListView>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Duplicate Selection
+                                </TextBlock>
+                                <CheckBox Name="DuplicateSelection" Margin="20,0,0,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+
+
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    HighLight Current Line
+                                </TextBlock>
+                                <CheckBox Name="highlightcurrentline" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Gradient Selection
+                                </TextBlock>
+                                <CheckBox Name="gselection" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Triple Click Line Selection
+                                </TextBlock>
+                                <CheckBox Name="tripleclick" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Italic Comments
+                                </TextBlock>
+                                <CheckBox Name="italiccomments" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Middle Click Scrolling
+                                </TextBlock>
+                                <CheckBox Name="mclickscrolling" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Align Assignments
+                                </TextBlock>
+                                <CheckBox Name="alignassignments" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Mouse Wheel Zoom
+                                </TextBlock>
+                                <CheckBox Name="mwzoom" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                    </ListView>
+                    <!--</StackPanel>-->
+                </TabItem>
+                <TabItem Header="Others">
+                    <ListView>
                         <ListViewItem>
                             <StackPanel>
                                 <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
@@ -119,36 +196,34 @@
                             </StackPanel>
                         </ListViewItem>
                     </ListView>
-                        <!--</StackPanel>-->
                 </TabItem>
-                <TabItem Header="Sample" Name="tabItem1">
-                    <StackPanel>
-                        <!--<StackPanel Orientation="Horizontal">
-                            <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" HorizontalAlignment="Left" Height="50"></Image>
-                            <TextBlock FontFamily="Courier New" Margin="10" FontSize="25" FontWeight="SemiBold" Foreground="BlueViolet">
-                                    XFeatures
-                            </TextBlock>
-                        </StackPanel>-->
-                        <ListView >
+                <TabItem Header="About" >
+                    <DockPanel LastChildFill="True">
+                        <ListView DockPanel.Dock="Top">
                             <ListViewItem>
-                                <StackPanel>
-                                    <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
-                                    RSS Feed Reader
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/XFeatures;component/Resources/xfeatures_bk.png" Height="50"></Image>
+                                    <TextBlock FontFamily="Courier New" Margin="0,10,0,0" FontSize="35" Height="36"  FontWeight="SemiBold" Foreground="RoyalBlue" >
+                                    Features
                                     </TextBlock>
-                                    <CheckBox Name="RssFeed2" Margin="20,0,10,10" Content="Enable"  Click="RssCheckBox_Click"/>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                                        <Label Content="Feed Link" Margin="40,10,0,0"></Label>
-                                        <TextBox Name="link2" Margin="45,15,10,10" MinWidth="350" MinHeight="20"></TextBox>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Content="Refresh for every" Margin="40,10,0,0"></Label>
-                                        <TextBox Name ="time2" Margin="7,15,0,18" MinWidth="50" MinHeight="20" PreviewTextInput="NumericOnly" ></TextBox>
-                                        <Label Content="min" Margin="5,15,10,10"></Label>
-                                    </StackPanel>
+                                    <TextBlock  FontSize="9" FontWeight="SemiBold" Margin="0,30,0,0" Foreground="Red" Height="20" Width="201">
+                                    Beta Ver 1.1
+                                    </TextBlock>
                                 </StackPanel>
                             </ListViewItem>
-                        </ListView>
-                    </StackPanel>
+                            <!--<ListViewItem>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock FontFamily="Courier New" FontSize="12" FontWeight="SemiBold" Foreground="RoyalBlue" TextWrapping="Wrap">
+                            This extension adds nice to have features to Atmel Studio. Give a try and report bugs to haiganeshkumar@gmail.com.
+                                    </TextBlock>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem>
+
+                            </ListViewItem>-->
+                        </ListView>                        
+                            <WebBrowser Margin="8,0,14,0"  DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Top"  Name="XFeaturesWeb"/>                        
+                    </DockPanel>
                 </TabItem>
             </TabControl>
         </DockPanel>

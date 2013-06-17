@@ -2,7 +2,7 @@
 // MUST match guids.h
 using System;
 
-namespace Atmel.XFeatures
+namespace XFeatures
 {
     static class GuidList
     {

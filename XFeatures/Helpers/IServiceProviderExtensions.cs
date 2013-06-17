@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Atmel.XFeatures.Helpers
+namespace XFeatures.Helpers
 {
     internal static class IServiceProviderExtensions
     {

@@ -16,8 +16,9 @@ using Microsoft.VisualStudio.Editor;
 using System.Reflection;
 using System.IO;
 using System.Windows.Forms;
+using XFeatures.Settings;
 
-namespace Atmel.XFeatures.Helpers
+namespace XFeatures.Helpers
 {
     internal static class StudioUtility
     {
@@ -318,6 +319,26 @@ namespace Atmel.XFeatures.Helpers
                 MessageBox.Show(ex.Message);
             }
             return string.Empty;
+        }
+
+        public static string GetXFeaturesSettingsFilePath(SettingsDataset dset)
+        {
+            //// The folder for the roaming current user 
+            //string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            //// Combine the base folder with your specific folder....
+            //string specificFolder = Path.Combine(folder, "XFeatures");
+
+            //// Check if folder exists and if not, create it
+            //if (!Directory.Exists(specificFolder))
+            //    Directory.CreateDirectory(specificFolder);
+            //return Path.Combine(specificFolder, "XFeatures.xml");
+            //MessageBox.Show("Attach");
+                Assembly thisAssembly;                
+                thisAssembly = Assembly.GetAssembly(dset.GetType());
+                // Gets the location of the assembly using file: protocol.
+                //MessageBox.Show(thisAssembly.CodeBase + "  " + thisAssembly.Location);
+            return Path.Combine(Path.GetDirectoryName(thisAssembly.Location), "XFeatures.xml");
         }
     }
 }
