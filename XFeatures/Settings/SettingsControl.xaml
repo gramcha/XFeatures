@@ -14,7 +14,7 @@
                                     Features
                     </TextBlock>
                     <TextBlock  FontSize="9" FontWeight="SemiBold" Foreground="Red" Margin="0,40,0,0" Height="20" Width="201">
-                                    Beta Ver 1.1
+                                    Beta Ver 1.3
                     </TextBlock>
                 </StackPanel>
             </DockPanel>
@@ -81,17 +81,31 @@
                                 <RadioButton Name="applyPrj" Margin="40,0,10,10" Content="Apply to project" Click="applyPrj_Click"/>
                             </StackPanel>
                         </ListViewItem>
-                        <!--<ListViewItem>
+                        <ListViewItem>
                             <StackPanel>
                                 <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
-                                    Vissual Assist 
-                                </TextBlock>
-                                <TextBlock  FontSize="12" FontWeight="SemiBold" DockPanel.Dock="Top" Margin="30,5,0,5">
-                                                Cleanup Visual Assist Cache
-                                </TextBlock>
-                                <CheckBox Name="CleanVisualAssistCache" DockPanel.Dock="Top" Margin="45,3,0,5" Content="Enable"   />                                
+                                    Highlight Find Results
+                                </TextBlock>                                
+                                <CheckBox Name="highlightfindresult" DockPanel.Dock="Top" Margin="45,3,0,5" Content="Enable"   />                                
                             </StackPanel>
-                        </ListViewItem>-->
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    FAF File Open
+                                </TextBlock>
+                                <CheckBox Name="SpaceAsWildCard" Margin="20,0,10,10" Content="Space As Wildcard" />
+                                <CheckBox Name="SearchIntheMiddle" Content="Search in the middle" Margin="20,0,10,10"/>
+                                <CheckBox Name="UseCamelCase" Content="Use camel case" Margin="20,0,10,10"/>
+                                <CheckBox Name="IgnoreExternalDependencies" Content="Ignore external dependencies" Margin="20,0,10,10"/>
+                                <CheckBox Name="OpenMultipleFiles" Content="Open multiple files" Margin="20,0,10,10"/>
+                                <CheckBox Name="AutoColumnResize" Content="Auto Column Resize" Margin="20,0,10,10"/>
+                                <StackPanel Orientation="Horizontal" >
+                                    <Label Content="Maximum results" Margin="20,10,0,0"></Label>
+                                    <TextBox Name="MaximumResults" Margin="5,15,10,10" MinWidth="50" MinHeight="20" PreviewTextInput="NumericOnly"></TextBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </ListViewItem>
                     </ListView>
                     <!--</StackPanel>-->
                 </TabItem>
@@ -165,6 +179,30 @@
                                 <CheckBox Name="mwzoom" Margin="20,0,10,10" Content="Enable" />
                             </StackPanel>
                         </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel >
+                              <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                              Synchronize Mouse Wheel Zoom
+                              </TextBlock>
+                                <CheckBox Name="syncmwzoom" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    XHighlighter
+                                </TextBlock>
+                                <CheckBox Name="xhighlight" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Email Code Snippet
+                                </TextBlock>
+                                <CheckBox Name="emailcode" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
                     </ListView>
                     <!--</StackPanel>-->
                 </TabItem>
@@ -195,6 +233,14 @@
                                 </StackPanel>
                             </StackPanel>
                         </ListViewItem>
+                        <ListViewItem>
+                            <StackPanel>
+                                <TextBlock Margin="10" FontSize="15" FontWeight="SemiBold">
+                                    Hide Menus
+                                </TextBlock>
+                                <CheckBox Name="HideMenu" Margin="20,0,10,10" Content="Enable" />
+                            </StackPanel>
+                        </ListViewItem>
                     </ListView>
                 </TabItem>
                 <TabItem Header="About" >
@@ -207,7 +253,7 @@
                                     Features
                                     </TextBlock>
                                     <TextBlock  FontSize="9" FontWeight="SemiBold" Margin="0,30,0,0" Foreground="Red" Height="20" Width="201">
-                                    Beta Ver 1.1
+                                    Beta Ver 1.3
                                     </TextBlock>
                                 </StackPanel>
                             </ListViewItem>

@@ -54,7 +54,6 @@ namespace XFeatures
                     }
                 }
             }
-            
             //Debug.WriteLine("projpriority of " + pszFileName +" "+ projpriority.ToString());
             pSLMgrSupport.SetProjectLoadPriority(guidProjectID, projpriority);// (uint)_VSProjectLoadPriority.PLP_BackgroundLoad);             
             return VSConstants.S_OK;
@@ -65,7 +64,8 @@ namespace XFeatures
             return VSConstants.S_OK;
         }
         public int OnAfterCloseSolution(object pUnkReserved)
-        {            
+        {
+            CloseFAFFileOpen();
             return VSConstants.S_OK;
         }
 
@@ -112,5 +112,6 @@ namespace XFeatures
         {
             return VSConstants.S_OK;
         }
+
     }
 }

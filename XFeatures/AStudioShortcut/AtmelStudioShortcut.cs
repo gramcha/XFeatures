@@ -49,11 +49,11 @@ namespace XFeatures.AStudioShortcut
                 }
                 return true;
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException )
             {
                 MessageBox.Show(Resources.AtmelStudioShortcut_SetAtmelStudioShortcutCustomMenu_Run_studio_as_admin);
             }
-            catch (SecurityException ex)
+            catch (SecurityException )
             {
                 MessageBox.Show(Resources.AtmelStudioShortcut_SetAtmelStudioShortcutCustomMenu_Run_studio_as_admin);
             }

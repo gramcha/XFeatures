@@ -56,6 +56,9 @@
       <Group guid="guidXFeaturesCmdSet" id="ToolsMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
       </Group>
+      <Group guid="guidXFeaturesCmdSet" id="CodeWndContextMenuGroup" priority="0x000">
+        <Parent guid="guidSHLMainMenu" id ="IDM_VS_CTXT_CODEWIN"/>
+      </Group>
     </Groups>
     
     <!--Buttons section. -->
@@ -111,6 +114,14 @@
           <ButtonText>XFeatures Options</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdidForceGC" priority="0x0101" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="ToolsMenuGroup" />
+        <Icon guid="guidforcegc" id="forcegcpng" />
+        <Strings>
+          <CommandName>cmdidForceGC</CommandName>
+          <ButtonText>Force GC</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidXFeaturesCmdSet" id="cmdidAlignAssignments" priority="0x0100" type="Button">
         <Parent guid="guidXFeaturesCmdSet" id="EditMenuGroup" />
         <!--<Icon guid="guidImages" id="bmpPic1" />-->
@@ -122,6 +133,101 @@
           <CommandName>cmdidAlignAssignments</CommandName>
           <ButtonText>Align Assignments</ButtonText>
         </Strings>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdEmailCodeSnippet" priority="0x0100" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="CodeWndContextMenuGroup" />        
+        <Strings>
+          <CommandName>cmdEmailCodeSnippet</CommandName>
+          <ButtonText>Email Code Snippet</ButtonText>
+        </Strings>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility </CommandFlag>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdidFAFFileopen" priority="0x0100" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="EditMenuGroup" />
+        <!--<Icon guid="guidImages" id="bmpPic1" />-->
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DontCache</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <CommandName>cmdidFAFFileopen</CommandName>
+          <ButtonText>FAF File Open</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdFindLine" priority="0x0" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="CodeWndContextMenuGroup" />
+        <Strings>
+          <CommandName>cmdFindLine</CommandName>
+          <ButtonText>Find Current Line</ButtonText>
+        </Strings>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility </CommandFlag>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdFindLastTarget" priority="0x01" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="CodeWndContextMenuGroup" />
+        <Strings>
+          <CommandName>cmdFindLastTarget</CommandName>
+          <ButtonText>Find Last Target</ButtonText>
+        </Strings>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility </CommandFlag>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdInsertifdef" priority="0x02" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="CodeWndContextMenuGroup" />
+        <Strings>
+          <CommandName>cmdInsertifdef</CommandName>
+          <ButtonText>Insert #ifdef</ButtonText>
+        </Strings>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility </CommandFlag>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdInsertifndef" priority="0x03" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="CodeWndContextMenuGroup" />
+        <Strings>
+          <CommandName>cmdInsertifndef</CommandName>
+          <ButtonText>Insert #ifndef</ButtonText>
+        </Strings>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility </CommandFlag>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdInsertOneTimeInclude" priority="0x04" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="CodeWndContextMenuGroup" />
+        <Strings>
+          <CommandName>cmdInsertOneTimeInclude</CommandName>
+          <ButtonText>One Time Include</ButtonText>
+        </Strings>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility </CommandFlag>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdBreakatMain" priority="0x05" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="CodeWndContextMenuGroup" />
+        <Strings>
+          <CommandName>cmdBreakatMain</CommandName>
+          <ButtonText>Break at main()</ButtonText>
+        </Strings>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility </CommandFlag>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdidMultiWordFind" priority="0x0100" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="EditMenuGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DontCache</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <CommandName>cmdidMultiWordFind</CommandName>
+          <ButtonText>Multi Word Finder</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidXFeaturesCmdSet" id="cmdLineToTop" priority="0x05" type="Button">
+        <Parent guid="guidXFeaturesCmdSet" id="CodeWndContextMenuGroup" />
+        <Strings>
+          <CommandName>cmdLineToTop</CommandName>
+          <ButtonText>Line to top</ButtonText>
+        </Strings>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility </CommandFlag>
       </Button>
     </Buttons>
    
@@ -136,6 +242,7 @@
       <Bitmap guid="guidDuplicate" href="Resources\DuplicateSelection.png" usedList="duplicatepng" />
       <Bitmap guid="guidRssFeed" href="Resources\rss.png" usedList="rssfeedpng"/>
       <Bitmap guid="guidSettings" href="Resources\xfeatures.png" usedList="XFeaturespng"/>
+      <Bitmap guid="guidforcegc" href="Resources\xfeatures.png" usedList="forcegcpng"/>
     </Bitmaps>
  
   </Commands>
@@ -144,7 +251,12 @@
     <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidDupSelection" key1="D" mod1="Alt" editor="guidVSStd97"/>
     <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidRssFeedViewer" key1="R" mod1="Alt" editor="guidVSStd97"/>
     <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidXFeaturesSettings" key1="X" mod1="Alt" editor="guidVSStd97"/>
+    <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidForceGC" key1="C" mod1="Alt" editor="guidVSStd97"/>
     <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidAlignAssignments" key1="VK_OEM_6" mod1="Control Alt" editor="guidVSStd97" />
+    <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidFAFFileopen" editor="guidVSStd97" key1="K" mod1="Control" key2="O" mod2="Control" />
+    <KeyBinding guid="guidXFeaturesCmdSet" id="cmdFindLastTarget" editor="guidVSStd97" key1="F" mod1="Control Alt" key2="T" mod2="Control Alt"/>
+    <KeyBinding guid="guidXFeaturesCmdSet" id="cmdFindLine" editor="guidVSStd97" key1="F" mod1="Control Alt" key2="L" mod2="Control Alt"/>
+    <KeyBinding guid="guidXFeaturesCmdSet" id="cmdidMultiWordFind" editor="guidVSStd97" key1="M" mod1="Control" key2="F" mod2="Control" />
   </KeyBindings>
 
 
@@ -160,12 +272,26 @@
       <IDSymbol name="EditMenuGroup" value="0x1021" />
       <IDSymbol name="ViewMenuGroup" value="0x1022" />
       <IDSymbol name="ToolsMenuGroup" value="0x1023" />
+      <IDSymbol name="CodeWndContextMenuGroup" value="0x1024" />
       
+
       <IDSymbol name="cmdidSlnLoadCommand" value="0x0100" />
       <IDSymbol name="cmdidDupSelection" value="0x0200" />
       <IDSymbol name="cmdidRssFeedViewer" value="0x0300" />
       <IDSymbol name="cmdidXFeaturesSettings" value="0x0400" />
-      <IDSymbol name="cmdidAlignAssignments" value="0x0500" />      
+      <IDSymbol name="cmdidAlignAssignments" value="0x0500" />
+      <IDSymbol name="cmdidFAFFileopen" value="0x0501" />
+      <IDSymbol name="cmdidMultiWordFind" value="0x0502" />
+      <IDSymbol name="cmdEmailCodeSnippet" value="0x0600" />
+      <IDSymbol name="cmdFindLastTarget" value="0x0601" />
+      <IDSymbol name="cmdFindLine" value="0x0602" />
+      <IDSymbol name="cmdInsertifdef" value="0x0603" />
+      <IDSymbol name="cmdInsertifndef" value="0x0604" />
+      <IDSymbol name="cmdInsertOneTimeInclude" value="0x0605" />
+      <IDSymbol name="cmdBreakatMain" value="0x0606" />
+      <IDSymbol name="cmdLineToTop" value="0x0607" />
+      <IDSymbol name="cmdidForceGC" value="0x0700" />
+      
     </GuidSymbol>
     
     
@@ -185,6 +311,9 @@
     </GuidSymbol>
     <GuidSymbol name="guidSettings" value="{1F61B80E-A329-4468-8A3A-22302A214CDE}" >
       <IDSymbol name="XFeaturespng" value="1" />
+    </GuidSymbol>
+    <GuidSymbol name="guidforcegc" value="{2AD6F4E8-FBDB-4546-8230-DDE21C537E8B}" >
+      <IDSymbol name="forcegcpng" value="1" />
     </GuidSymbol>
   </Symbols>
 

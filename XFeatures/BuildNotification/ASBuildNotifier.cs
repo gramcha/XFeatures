@@ -235,7 +235,7 @@ namespace XFeatures.BuildNotification
                         directoryInfo.Delete(true);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
                     //MessageBox.Show(ex.Message);
                 }

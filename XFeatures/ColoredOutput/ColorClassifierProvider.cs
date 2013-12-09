@@ -167,7 +167,9 @@ namespace XFeatures.ColoredOutput
         BuildContent,
         BuildInfo,
         BuildError,
-        BuildWarning
+        BuildWarning,
+        FindResultsSearchTerm,
+        FindResultsFilename
     }
 
     public class RegExClassifier
@@ -201,7 +203,8 @@ namespace XFeatures.ColoredOutput
         public const string BuildInfo = "BuildInfo";        
         public const string BuildError = "BuildError";
         public const string BuildWarning = "BuildWarning";
-
+        public const string FindResultsSearchTerm =  "FindResultsSearchTerm";
+        public const string FindResultsFilename=    "FindResultsFilename";
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Word)]
         public static ClassificationTypeDefinition BuildHeaderDefinition { get; set; }
@@ -302,6 +305,41 @@ namespace XFeatures.ColoredOutput
             {
                 DisplayName = XFeatures + "Build Warning";
                 ForegroundColor = Colors.Olive;
+            }
+        }
+
+        [Export]
+        [Name(FindResultsSearchTerm)]
+        public static ClassificationTypeDefinition FindResultsSearchTermDefinition { get; set; }
+
+        [Name(FindResultsSearchTerm)]
+        [UserVisible(true)]
+        [Export(typeof(EditorFormatDefinition))]
+        [ClassificationType(ClassificationTypeNames = FindResultsSearchTerm)]
+        public sealed class FindResultsSearchTermFormat : ClassificationFormatDefinition
+        {
+            public FindResultsSearchTermFormat()
+            {
+                DisplayName = XFeatures + "Find Results Search Term";
+                ForegroundColor = Colors.Blue;
+            }
+        }
+
+        [Export]
+        [Name(FindResultsFilename)]
+        public static ClassificationTypeDefinition FindFilenameDefinition { get; set; }
+
+        [Name(FindResultsFilename)]
+        [UserVisible(true)]
+        [Export(typeof(EditorFormatDefinition))]
+        [ClassificationType(ClassificationTypeNames = FindResultsFilename)]
+
+        public sealed class FindResultsFilenameFormat : ClassificationFormatDefinition
+        {
+            public FindResultsFilenameFormat()
+            {
+                DisplayName = XFeatures + "Find Results Filename";
+                ForegroundColor = Colors.Gray;
             }
         }
     }

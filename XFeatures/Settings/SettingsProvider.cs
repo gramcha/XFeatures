@@ -96,5 +96,39 @@ namespace XFeatures.Settings
         {
             return SettingsManager.XSettings.OtherFeatures.TripleClick;
         }
+
+        public static bool IsSyncMouseWheelZoomEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.SyncMouseWheelZoom;
+        }
+        public static bool IsXhighlighterEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.Xhighlighter;
+        }
+        public static bool IsEmailCodeEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.EmailCode;
+        }
+        public static FAF GetFAFSettings()
+        {
+            return SettingsManager.XSettings.FileOpen;
+        }
+        public static FinderDataset GetFinderDataset()
+        {
+            return SettingsManager.XSettings.FindDataset;
+        }
+        public static void WriteFinderDataSet(FinderDataset dataset)
+        {
+            SettingsManager.XSettings.FindDataset = dataset;
+            SettingsManager.WriteSettings(SettingsManager.XSettings);
+        }
+        public static bool IsHideMenuEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.HideMenubar;
+        }
+        public static bool IsHighlightFindResultsEnabled()
+        {
+            return SettingsManager.XSettings.OtherFeatures.HighlightFindResults;
+        }
     }
 }

@@ -75,7 +75,7 @@ namespace XFeatures.Helpers
             {
                 base.OnCollectionChanged(e);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 //suppress not supported exception. At any case do not crash studio from this extension.
             }

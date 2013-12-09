@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization;
 using XFeatures.Helpers;
+using System.Collections.Generic;
 namespace XFeatures.Settings
 {
     public enum PriorityScope
@@ -26,6 +27,50 @@ namespace XFeatures.Settings
         public bool BuildSummary { get; set; }
     }
 
+    public class MouseZoomLevel
+    {
+        public MouseZoomLevel()
+        {
+            MinZoomLevel = 20;
+            MaxZoomLevel = 400;
+            LastZoomLesvel = 100;
+        }
+        public int MaxZoomLevel { get; set; }
+        public int MinZoomLevel { get; set; }
+        public int LastZoomLesvel { get; set; }
+    }
+    public enum Lookin
+    {
+        AllOpenDocs,
+        CurrentDoc,
+        CurrentProj,
+        EntireSoln
+    }
+    public enum ResultWindow
+    {
+        One,
+        Two
+    }
+    public class FinderDataset
+    {
+        public Lookin LookIn { get; set; }
+        public bool MatchCase { get; set; }
+        public bool MatchWholeWord { get; set; }
+        public string FileTypes { get; set; }
+        public ResultWindow ResultWnd { get; set; }
+        public bool DisplayFileNamesOnly { get; set; }
+        public List<string> FindWhat { get; set; }
+        public FinderDataset()
+        {
+            LookIn = Lookin.EntireSoln;
+            MatchCase = false;
+            MatchWholeWord = false;
+            FileTypes = "*.*";
+            ResultWnd = ResultWindow.One;
+            DisplayFileNamesOnly = false;
+            FindWhat = new List<string>();
+        }
+    }
     public class Others
     {
         public bool DuplicateSelection { get; set; }
@@ -43,6 +88,57 @@ namespace XFeatures.Settings
         public bool GradientSelection;
         public bool ItalicComments;
         public bool TripleClick;
+        public bool SyncMouseWheelZoom;
+        public bool Xhighlighter;
+        public bool EmailCode;
+        public bool HideMenubar;
+        public bool HighlightFindResults;
+        public Others()
+        {
+
+            DuplicateSelection = true;
+            CleanBuild = false;
+            ApplytoSolution = false;
+            ApplytoProject = false;
+            StudioShortcut = false;
+            RssFeed = false;
+            Link = "http://www.avrfreaks.net/forumrss.php";
+            Minute = 5;
+            HighLightCurrentLine = true;
+            MiddleClickScroll = true;
+            AlignAssignments = true;
+            MouseWheelZoom = true;
+            GradientSelection = true;
+            ItalicComments = true;
+            TripleClick = true;
+            SyncMouseWheelZoom = true;
+            Xhighlighter = true;
+            EmailCode = true;
+            HideMenubar = false;
+            HighlightFindResults = true;
+        }
+    }
+    public class FAF
+    {
+        public bool SpaceAsWildcard { get; set; }
+        public bool SearchInTheMiddle { get; set; }
+        public bool UseCamelCase { get; set; }
+        public bool IgnoreExternalDependencies { get; set; }
+        public string[] IgnorePatterns { get; set; }
+        public int ResultsLimit { get; set; }
+        public bool OpenMultipleFiles { get; set; }
+        public bool AutoColumnResize { get; set; }
+        public FAF()
+        {
+            SpaceAsWildcard = true;
+            SearchInTheMiddle = true;
+            UseCamelCase = true;
+            IgnoreExternalDependencies = false;
+            IgnorePatterns = new string[0];
+            ResultsLimit = 50;
+            OpenMultipleFiles = false;
+            AutoColumnResize = true;
+        }
     }
     [Serializable()]
     public class SettingsDataset : ISerializable
@@ -52,6 +148,8 @@ namespace XFeatures.Settings
         public BuildAssistance BuildAssist { get; set; }
         //public bool CleanupVissualAssist { get; set; }
         public Others OtherFeatures { get; set; }
+        public FAF FileOpen { get; set; }
+        public FinderDataset FindDataset { get; set; }
         public SettingsDataset()
         {
             PriorityLevelScope = PriorityScope.Solution;
@@ -61,23 +159,10 @@ namespace XFeatures.Settings
             BuildAssist.BalloonTip = true;
             BuildAssist.TaskbarNotification = true;
             BuildAssist.BuildSummary = true;
+            FileOpen = new FAF();//constructor has default value
+            FindDataset = new FinderDataset();//constructor has default value
             //CleanupVissualAssist = true;
             OtherFeatures = new Others();
-            OtherFeatures.DuplicateSelection = true;
-            OtherFeatures.CleanBuild = false;
-            OtherFeatures.ApplytoSolution = false;
-            OtherFeatures.ApplytoProject = false;
-            OtherFeatures.StudioShortcut = false;
-            OtherFeatures.RssFeed = false;
-            OtherFeatures.Link = "http://www.avrfreaks.net/forumrss.php";
-            OtherFeatures.Minute = 5;
-            OtherFeatures.HighLightCurrentLine = true;
-            OtherFeatures.MiddleClickScroll = true;
-            OtherFeatures.AlignAssignments = true;
-            OtherFeatures.MouseWheelZoom = true;
-            OtherFeatures.GradientSelection = true;
-            OtherFeatures.ItalicComments = true;
-            OtherFeatures.TripleClick = true;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -127,7 +212,7 @@ namespace XFeatures.Settings
                         UpdateHandler(null);
                     }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
 
             }
@@ -150,7 +235,7 @@ namespace XFeatures.Settings
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
             }
             return CreateDefaultSettings();

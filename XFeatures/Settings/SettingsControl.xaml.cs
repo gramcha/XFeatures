@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using Microsoft.VisualStudio.ExtensionManager;
 using Microsoft.VisualStudio.Shell;
 using XFeatures.AStudioShortcut;
+using System.Windows.Input;
 
 namespace XFeatures.Settings
 {
@@ -88,10 +89,24 @@ namespace XFeatures.Settings
             gselection.IsChecked             = settings.OtherFeatures.GradientSelection;
             italiccomments.IsChecked         = settings.OtherFeatures.ItalicComments;
             tripleclick.IsChecked            = settings.OtherFeatures.TripleClick;
-            
+            syncmwzoom.IsChecked             = settings.OtherFeatures.SyncMouseWheelZoom;
+            xhighlight.IsChecked             = settings.OtherFeatures.Xhighlighter;
+            emailcode.IsChecked              = settings.OtherFeatures.EmailCode;
+            HideMenu.IsChecked               = settings.OtherFeatures.HideMenubar;
+            highlightfindresult.IsChecked    = settings.OtherFeatures.HighlightFindResults;
+            FAFFileOpenInit(settings);
             QueryXFeaturesPath();
         }
-
+        private void FAFFileOpenInit(SettingsDataset settings)
+        {
+            SpaceAsWildCard.IsChecked                    = settings.FileOpen.SpaceAsWildcard;
+            SearchIntheMiddle.IsChecked                  = settings.FileOpen.SearchInTheMiddle;
+            UseCamelCase.IsChecked                       = settings.FileOpen.UseCamelCase;
+            IgnoreExternalDependencies.IsChecked         = settings.FileOpen.IgnoreExternalDependencies;
+            OpenMultipleFiles.IsChecked                  = settings.FileOpen.OpenMultipleFiles;
+            AutoColumnResize.IsChecked                   = settings.FileOpen.AutoColumnResize;
+            MaximumResults.Text                          = settings.FileOpen.ResultsLimit.ToString(CultureInfo.InvariantCulture);
+        }
 
         private void SolutionLevel_Click(object sender, RoutedEventArgs e)
         {
@@ -199,17 +214,17 @@ namespace XFeatures.Settings
                 settings.PLevels = PriorityLevels.DemandLoad;
             }
             settings.BuildAssist.HighightBuildOutput = HighlightOutput.IsChecked ?? true;
-            settings.BuildAssist.BalloonTip = BalloonTip.IsChecked ?? true;
+            settings.BuildAssist.BalloonTip          = BalloonTip.IsChecked ?? true;
             settings.BuildAssist.TaskbarNotification = Taskbar.IsChecked ?? true;
-            settings.BuildAssist.BuildSummary = BuildSummary.IsChecked ?? true;
+            settings.BuildAssist.BuildSummary        = BuildSummary.IsChecked ?? true;
             //settings.CleanupVissualAssist = CleanVisualAssistCache.IsChecked ?? true;
             settings.OtherFeatures.DuplicateSelection = DuplicateSelection.IsChecked ?? true;
-            settings.OtherFeatures.CleanBuild = cleanBuild.IsChecked ?? false;
-            settings.OtherFeatures.ApplytoSolution = applySln.IsChecked ?? false;
-            settings.OtherFeatures.ApplytoProject = applyPrj.IsChecked ?? false;
-            settings.OtherFeatures.StudioShortcut = Shortcut.IsChecked ?? false;
-            settings.OtherFeatures.RssFeed = RssFeed.IsChecked ?? false;
-            settings.OtherFeatures.Link = link.Text;
+            settings.OtherFeatures.CleanBuild         = cleanBuild.IsChecked ?? false;
+            settings.OtherFeatures.ApplytoSolution    = applySln.IsChecked ?? false;
+            settings.OtherFeatures.ApplytoProject     = applyPrj.IsChecked ?? false;
+            settings.OtherFeatures.StudioShortcut     = Shortcut.IsChecked ?? false;
+            settings.OtherFeatures.RssFeed            = RssFeed.IsChecked ?? false;
+            settings.OtherFeatures.Link               = link.Text;
             if (string.IsNullOrEmpty(time.Text) == true || string.IsNullOrWhiteSpace(time.Text) == true)
                 settings.OtherFeatures.Minute = 5;
             else
@@ -221,7 +236,40 @@ namespace XFeatures.Settings
             settings.OtherFeatures.GradientSelection    = gselection.IsChecked ?? true;
             settings.OtherFeatures.ItalicComments       = italiccomments.IsChecked ?? true;
             settings.OtherFeatures.TripleClick          = tripleclick.IsChecked ?? true;
+            settings.OtherFeatures.SyncMouseWheelZoom   = syncmwzoom.IsChecked ?? true;
+            settings.OtherFeatures.Xhighlighter         = xhighlight.IsChecked ?? true;
+            settings.OtherFeatures.EmailCode            = emailcode.IsChecked ?? true;
+            settings.OtherFeatures.HideMenubar          = HideMenu.IsChecked ?? false;
+            settings.OtherFeatures.HighlightFindResults = highlightfindresult.IsChecked ?? true;
+
+            settings.FileOpen.SpaceAsWildcard=SpaceAsWildCard.IsChecked??true;
+            settings.FileOpen.SearchInTheMiddle= SearchIntheMiddle.IsChecked??true;
+            settings.FileOpen.UseCamelCase=     UseCamelCase.IsChecked??true;
+            settings.FileOpen.IgnoreExternalDependencies=IgnoreExternalDependencies.IsChecked??false;
+            settings.FileOpen.OpenMultipleFiles= OpenMultipleFiles.IsChecked??false;
+            settings.FileOpen.AutoColumnResize= AutoColumnResize.IsChecked??true;
+            if (string.IsNullOrEmpty(MaximumResults.Text) == true || string.IsNullOrWhiteSpace(MaximumResults.Text) == true)
+                settings.FileOpen.ResultsLimit = 50;
+            else
+                settings.FileOpen.ResultsLimit = Convert.ToInt32(MaximumResults.Text);
+
             SettingsManager.WriteSettings(settings);
+            //Key press alt
+            //if (settings.OtherFeatures.HideMenubar)
+            //{
+            //                var key = Key.LeftAlt;                    // Key to send
+            //  var target = Keyboard.FocusedElement;    // Target element
+            //  var routedEvent = Keyboard.KeyDownEvent; // Event to send
+
+            //  target.RaiseEvent(
+            //    new KeyEventArgs(
+            //      Keyboard.PrimaryDevice,
+            //      Keyboard.PrimaryDevice.ActiveSource,
+            //      0,
+            //      key)
+            //    { RoutedEvent=routedEvent }
+            //  );
+            //}
         }
         
         private void Shortcut_Click(object sender, RoutedEventArgs e)
@@ -253,6 +301,7 @@ namespace XFeatures.Settings
             {
             }
         }
+
 
     }
 }

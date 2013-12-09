@@ -340,5 +340,21 @@ namespace XFeatures.Helpers
                 //MessageBox.Show(thisAssembly.CodeBase + "  " + thisAssembly.Location);
             return Path.Combine(Path.GetDirectoryName(thisAssembly.Location), "XFeatures.xml");
         }
+
+        //static bool multitext = false;
+
+        //public static void StartMulltitextFinder()
+        //{
+        //    multitext = true;
+        //}
+
+        //public static void EndMulltitextFinder()
+        //{
+        //    multitext = false;
+        //}
+        //public static bool IsMultitextFind()
+        //{
+        //    return multitext;
+        //}
     }
 }

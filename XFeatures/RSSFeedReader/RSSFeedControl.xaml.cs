@@ -36,7 +36,7 @@ namespace XFeatures.RSSFeedReader
         /// http://en.wikipedia.org/wiki/RSS
         /// </summary>
 
-        private string rssUrl ="http://www.avrfreaks.net/forumrss.php";// "http://asf.com/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&content=&product=Atmel%20Studio%206&query_format=specific&title=Bug%20List&ctype=atom";
+        //private string rssUrl ="http://www.avrfreaks.net/forumrss.php";// "http://asf.com/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&content=&product=Atmel%20Studio%206&query_format=specific&title=Bug%20List&ctype=atom";
         System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         //System.Windows.Threading.DispatcherTimer btntimer = new System.Windows.Threading.DispatcherTimer();
         //ObservableCollection<RSSFeedDataset> rssfeedcollection = new ObservableCollection<RSSFeedDataset>();
