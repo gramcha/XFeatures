@@ -78,3 +78,4 @@ Version 1.3			- Adding following features
 
 						· XHighlighter Color selection exposed at "Fonts and Colors"
 
+Version 1.3			- Adding Atmel Studio 6.2 support and fixing minor issues.
