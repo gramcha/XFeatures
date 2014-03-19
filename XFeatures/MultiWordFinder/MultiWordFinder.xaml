@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="XFeatures.MultiWordFinder.MultiWordFinder"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+    <Grid>
+        <DockPanel>
+            <Label Content ="Look in:" DockPanel.Dock="Top"></Label>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <RadioButton Name="allopeneddocs" Margin="5,0,10,5" Content="All Opened Documents" GroupName="lookin"></RadioButton>
+                <RadioButton Name="curdoc" Content="Current Document" Margin="0,0,5,0" GroupName="lookin"></RadioButton>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <RadioButton Name="project" Margin="5,0,10,5" Content="Current Project              " GroupName="lookin"></RadioButton>
+                <RadioButton Name="solution" Content="Entire Solution" Margin="0,0,5,0" GroupName="lookin"></RadioButton>
+            </StackPanel>
+            <Label DockPanel.Dock="Top" Content="Find options"/>
+            <DockPanel DockPanel.Dock="Top">
+                <CheckBox Name="matchcase" Margin="5,0,10,5" Content="Match Case"></CheckBox>
+                <CheckBox Name="matchwholeword" Content="Match Whole Word"></CheckBox>
+            </DockPanel>
+            <Label DockPanel.Dock="Top" Content="Look at these file types:"/>
+            <TextBox DockPanel.Dock="Top" Margin="5,0,5,0" Name="filetype"></TextBox>
+            <Label DockPanel.Dock="Top" Content="Result options"/>
+            <StackPanel DockPanel.Dock="Top">
+                <Label DockPanel.Dock="Top" Content="List result in:"/>
+                <RadioButton Margin="5,0,0,5" DockPanel.Dock="Bottom" Name="findresultwnd1" Content="Find results 1 window"></RadioButton>
+                <RadioButton Margin="5,0,0,5" DockPanel.Dock="Bottom"  Name="findresultwnd2" Content="Find results 2 window"></RadioButton>
+                <CheckBox Margin="5,0,0,5" DockPanel.Dock="Bottom" Content="Display file names only" Name="displayfilenameonly" Visibility="Hidden" />
+            </StackPanel>
+            <Label DockPanel.Dock="Top" Content="Find what:"></Label>
+            <DockPanel DockPanel.Dock="Top">
+                <!--<StackPanel DockPanel.Dock="Top" Orientation="Horizontal">-->
+                <TextBox DockPanel.Dock="Top" Margin="5,0,5,5" Name="inputword" IsVisibleChanged="inputword_IsVisibleChanged">
+                    <TextBox.InputBindings>
+                        <KeyBinding Command="{Binding Path=Addcommand, UpdateSourceTrigger=PropertyChanged}" Key="Enter"></KeyBinding>
+                    </TextBox.InputBindings>
+                </TextBox>
+                <!--<TextBox Width="auto" MinWidth="220" Height="20" Margin="5,0,0,5" Name="inputword"></TextBox>-->
+                <!--<Button Width="40" Height="20"  Margin="5,0,5,5" Content="Add" Name="addbtn"></Button>-->
+                <!--</StackPanel>-->
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Top">
+                <Button Width="70" Height="20" Margin="15,0,0,0" HorizontalAlignment="Left" Content="Add" Name="addbtn" Click="addbtn_Click"></Button>
+                <Button Margin="45,0,0,0"  HorizontalAlignment="Left" DockPanel.Dock="Left" Width="70" Height="20"  Content="Remove" Name="removebtn" Click="removebtn_Click" />
+                <Button Margin="45,0,0,0"  HorizontalAlignment="Left" DockPanel.Dock="Left" Width="70" Height="20"  Content="Remove All" Name="removeallbtn" Click="removeallbtn_Click" />
+                <Button Margin="45,0,0,0" HorizontalAlignment="Left" DockPanel.Dock="Left" Width="70" Height="20"  Content="Find All" Name="findbtn" Click="findbtn_Click" />
+            </DockPanel>
+            <ListView Margin="5,5,5,5" Name="findlist" DockPanel.Dock="Top" Height="200">
+            </ListView>
+        </DockPanel>
+    </Grid>
+</UserControl>
