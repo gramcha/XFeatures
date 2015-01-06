@@ -37,6 +37,7 @@ namespace XFeatures.BuildNotification
         private List<string> projectsBuildReport = null;
         private bool iscleanconfig = false;
         private bool isprojectscope = false;
+        private EnvDTE.BuildEvents bevents;
         ~ASBuildNotifier()
         {
             notifyIcon.Dispose();
@@ -50,7 +51,7 @@ namespace XFeatures.BuildNotification
             notifyIcon.BalloonTipClicked += new EventHandler(BalloonTipClicked);
             if (events2 != null)
             {
-
+                bevents = events2.BuildEvents;
                 //MessageBox.Show("Attach");
                 events2.BuildEvents.OnBuildBegin += new _dispBuildEvents_OnBuildBeginEventHandler(ASBuildNotifier_OnBuildBegin);
                 events2.BuildEvents.OnBuildDone += ASBuildNotifier_OnBuildDone;
