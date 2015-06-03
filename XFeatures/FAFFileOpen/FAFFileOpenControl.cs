@@ -102,7 +102,9 @@ namespace XFeatures.FAFFileOpen
 
                     if (success)
                     {
-                        parentWindowPane.HideToolWindow();
+                        //Don't hide. Let user manually close it. otherwise it will be irritating to user.
+                        //parentWindowPane.HideToolWindow();
+                        //Don't hide
                     }
                 }
             }
