@@ -193,8 +193,18 @@ namespace XFeatures
         void FindLastTargetMenuCallback(object sender, EventArgs e)
         {
             string lastfind = DTE().Find.FindWhat;
-            DTE().ExecuteCommand("Edit.Find");
-            DTE().Find.FindWhat = lastfind;
+            if (string.IsNullOrEmpty(lastfind))
+                return;
+            try
+            {
+                DTE().ExecuteCommand("Edit.Find");
+                DTE().Find.FindWhat = lastfind;
+            }
+            catch (Exception)
+            {
+                //dnt do anything
+            }
+            
         }
         void FindCurrentLineMenuCallback(object sender, EventArgs e)
         {

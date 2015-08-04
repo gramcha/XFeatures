@@ -14,7 +14,7 @@
                                     Features
                     </TextBlock>
                     <TextBlock  FontSize="9" FontWeight="SemiBold" Foreground="Red" Margin="0,40,0,0" Height="20" Width="201">
-                                    Beta Ver 1.3
+                                    Beta Ver 1.6
                     </TextBlock>
                 </StackPanel>
             </DockPanel>
@@ -243,7 +243,7 @@
                         </ListViewItem>
                     </ListView>
                 </TabItem>
-                <TabItem Header="About" >
+                <TabItem Header="Help" >
                     <DockPanel LastChildFill="True">
                         <ListView DockPanel.Dock="Top">
                             <ListViewItem>
@@ -253,7 +253,7 @@
                                     Features
                                     </TextBlock>
                                     <TextBlock  FontSize="9" FontWeight="SemiBold" Margin="0,30,0,0" Foreground="Red" Height="20" Width="201">
-                                    Beta Ver 1.3
+                                    Beta Ver 1.6
                                     </TextBlock>
                                 </StackPanel>
                             </ListViewItem>

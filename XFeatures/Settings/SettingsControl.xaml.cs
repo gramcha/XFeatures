@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.VisualStudio.ExtensionManager;
+
 using Microsoft.VisualStudio.Shell;
 using XFeatures.AStudioShortcut;
 using System.Windows.Input;
@@ -283,23 +283,28 @@ namespace XFeatures.Settings
         {
             //XFeatures
             // Get the Extension Manager service. 
-            try
-            {
-                var extnMgr = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
-                if (extnMgr == null) return;
+            var path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(GetType().Assembly.Location), "Resources", "XFeatures.htm");
+            //MessageBox.Show(path);
+            XFeaturesWeb.Navigate(new Uri(path));
+            
+            //try
+            //{
+            //    MessageBox.Show("attach");
+            //    var extnMgr = Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
+            //    if (extnMgr == null) return;
 
-                IEnumerable<IInstalledExtension> extns = extnMgr.GetEnabledExtensions("XFeatures");
+            //    IEnumerable<IInstalledExtension> extns = extnMgr.GetEnabledExtensions("XFeatures");
 
-                foreach (var installedExtension in extns)
-                {
-                    var path = System.IO.Path.Combine(installedExtension.InstallPath, "Resources", "XFeatures.htm");
-                    XFeaturesWeb.Navigate(new Uri(path));
-                    break;
-                }    
-            }
-            catch(Exception ex)
-            {
-            }
+            //    foreach (var installedExtension in extns)
+            //    {
+            //        var path = System.IO.Path.Combine(installedExtension.InstallPath, "Resources", "XFeatures.htm");
+            //        XFeaturesWeb.Navigate(new Uri(path));
+            //        break;
+            //    }    
+            //}
+            //catch(Exception ex)
+            //{
+            //}
         }
 
 

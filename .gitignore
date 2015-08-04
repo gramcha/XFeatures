@@ -3,6 +3,8 @@
 *.user
 *.obj
 *.suo
+XFeatures.suo
+XFeatures.v12.suo
 obj/
 Debug/
 Release/

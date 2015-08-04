@@ -3,7 +3,7 @@
   <Identifier Id="3ac9d6e9-a3dc-4a27-a048-f4bb7fe5889b">
     <Name>XFeatures - Beta</Name>
     <Author>Gramcha</Author>
-    <Version>1.4</Version>
+    <Version>1.6</Version>
     <Description xml:space="preserve">Nice to have features in atmel studio.</Description>
     <Locale>1033</Locale>
     <MoreInfoUrl>http://studioextensiondevelopment.weebly.com</MoreInfoUrl>
@@ -21,7 +21,7 @@
       <IsolatedShell Version="6.0">AtmelStudio</IsolatedShell>
       <IsolatedShell Version="6.1">AtmelStudio</IsolatedShell>
       <IsolatedShell Version="6.2">AtmelStudio</IsolatedShell>
-	  <IsolatedShell Version="6.3">AtmelStudio</IsolatedShell>
+      <IsolatedShell Version="7.0">AtmelStudio</IsolatedShell>
     </SupportedProducts>
     <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
   </Identifier>
